@@ -1,0 +1,16 @@
+Package: readabel
+Type: Package
+Title: Accessing binary output files from ABEL suite
+Description: Accessing binary output files from ABEL suite
+Version: 0.0.0.9000
+Date: 2016-02-01
+Authors@R: person("Clemens", "Baumbach", role = c("aut", "cre"),
+    email = "clemens.baumbach@gmx.net")
+Suggests:
+    testthat
+Imports:
+    methods,
+    Rcpp (>= 0.12.3)
+LinkingTo: Rcpp
+License: GPL (>= 2)
+RoxygenNote: 5.0.1

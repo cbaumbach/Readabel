@@ -1,0 +1,13 @@
+PKG_CPPFLAGS += -I library/include
+PKG_LIBS += -L library/lib -l readabel $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+$(SHLIB): library/lib/libreadabel.a
+
+# Only library/Makefile knows the prerequisites of our library and is
+# thus in a position to decide whether our library needs to be rebuilt.
+# We use a phony target to force the top-level makefile to always run
+# library/Makefile.
+.PHONY: FORCE
+library/lib/libreadabel.a: FORCE
+FORCE:
+	cd library && $(MAKE)
