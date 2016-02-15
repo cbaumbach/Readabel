@@ -19,3 +19,7 @@ test_that("nrow", {
 test_that("ncol", {
     expect_equal(ncol(x), length(names(x)))
 })
+
+test_that("dim", {
+    expect_equal(dim(x), c(nrow(x), ncol(x)))
+})

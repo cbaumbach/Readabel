@@ -50,3 +50,13 @@ setGeneric("ncol")
 setMethod("ncol", "Readabel", function(x) {
     length(names(x))
 })
+
+setGeneric("dim")
+
+#' Return dimensions
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("dim", "Readabel", function(x) {
+    c(nrow(x), ncol(x))
+})

@@ -2,7 +2,9 @@
 
 export(create_fake_layout_file)
 export(read_omicabel)
+exportMethods(dim)
 exportMethods(names)
+exportMethods(ncol)
 exportMethods(nrow)
 import(Rcpp)
 import(methods)
