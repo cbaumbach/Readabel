@@ -27,3 +27,7 @@ test_that("dim", {
 test_that("snpNames", {
     expect_equal(snpNames(x), paste0("snp", 1:9))
 })
+
+test_that("traitNames", {
+    expect_equal(traitNames(x), paste0("trait", 1:7))
+})

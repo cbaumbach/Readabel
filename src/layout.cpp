@@ -48,3 +48,11 @@ RcppExport SEXP Layout__snpNames(SEXP xp)
 
     return snp_labels;
 }
+
+RcppExport SEXP Layout__traitNames(SEXP xp)
+{
+    Rcpp::XPtr<Readabel::Layout> ptr(xp);
+    Rcpp::CharacterVector trait_labels(Rcpp::wrap(ptr->trait_labels()));
+
+    return trait_labels;
+}

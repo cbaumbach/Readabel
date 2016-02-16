@@ -70,3 +70,13 @@ setGeneric("snpNames", function(x) standardGeneric("snpNames"))
 setMethod("snpNames", "Readabel", function(x) {
     .Call("Layout__snpNames", x@pointer)
 })
+
+setGeneric("traitNames", function(x) standardGeneric("traitNames"))
+
+#' Return trait labels
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("traitNames", "Readabel", function(x) {
+    .Call("Layout__traitNames", x@pointer)
+})
