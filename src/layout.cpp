@@ -40,3 +40,11 @@ RcppExport SEXP Layout__nrow(SEXP xp)
 
     return Rcpp::wrap(number_of_snps * number_of_traits);
 }
+
+RcppExport SEXP Layout__snpNames(SEXP xp)
+{
+    Rcpp::XPtr<Readabel::Layout> ptr(xp);
+    Rcpp::CharacterVector snp_labels(Rcpp::wrap(ptr->snp_labels()));
+
+    return snp_labels;
+}

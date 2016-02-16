@@ -60,3 +60,13 @@ setGeneric("dim")
 setMethod("dim", "Readabel", function(x) {
     c(nrow(x), ncol(x))
 })
+
+setGeneric("snpNames", function(x) standardGeneric("snpNames"))
+
+#' Return snp labels
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("snpNames", "Readabel", function(x) {
+    .Call("Layout__snpNames", x@pointer)
+})

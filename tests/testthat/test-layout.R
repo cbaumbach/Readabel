@@ -23,3 +23,7 @@ test_that("ncol", {
 test_that("dim", {
     expect_equal(dim(x), c(nrow(x), ncol(x)))
 })
+
+test_that("snpNames", {
+    expect_equal(snpNames(x), paste0("snp", 1:9))
+})
