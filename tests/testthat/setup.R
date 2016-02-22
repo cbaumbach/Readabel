@@ -1,4 +1,5 @@
-fake_layout_file <- file.path(tempdir(), "fake_layout_file.iout")
+fake_file_stem <- file.path(tempdir(), "fake_file")
+fake_layout_file <- paste0(fake_file_stem, ".iout")
 create_fake_layout_file(fake_layout_file)
 x <- read_omicabel(fake_layout_file)
 
