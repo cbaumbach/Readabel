@@ -1,0 +1,10 @@
+fake_layout_file <- file.path(tempdir(), "fake_layout_file.iout")
+create_fake_layout_file(fake_layout_file)
+x <- read_omicabel(fake_layout_file)
+
+snp_labels <- paste0("snp", 1:9)
+trait_labels <- paste0("trait", 1:7)
+covariates <- c("intercept", "sex", "snp")
+beta_labels <- paste0("beta_", covariates)
+se_labels <- paste0("se_", covariates)
+cov_labels <- paste0("cov_", c("sex_sex", "sex_snp", "snp_snp"))
