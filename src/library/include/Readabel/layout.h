@@ -36,6 +36,8 @@ namespace Readabel {
         std::vector<std::string> cov_labels_;
         std::vector<std::string> snp_labels_;
         std::vector<std::string> trait_labels_;
+        // Tile related.
+        int number_of_tiles_;
     };
 }
 

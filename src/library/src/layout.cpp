@@ -31,6 +31,9 @@ Layout::Layout(std::string& filename)
     read_labels(trait_labels_, bytes_per_label_, number_of_traits_, fp);
 
     fclose(fp);
+
+    number_of_tiles_ = ((number_of_snps_ - 1) / snps_per_tile_ + 1)
+        * ((number_of_traits_ - 1) / traits_per_tile_ + 1);
 }
 
 static void read_labels(std::vector<std::string>& labels, int bytes_per_label, int number_of_labels, FILE *fp)
@@ -112,6 +115,5 @@ const std::vector<std::string>& Layout::trait_labels() const
 
 int Layout::number_of_tiles() const
 {
-    return ((number_of_snps_ - 1) / snps_per_tile_ + 1)
-        * ((number_of_traits_ - 1) / traits_per_tile_ + 1);
+    return number_of_tiles_;
 }
