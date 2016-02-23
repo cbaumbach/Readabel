@@ -43,3 +43,26 @@ void Readabel::create_fake_layout_file(std::string filename)
 
     fclose(fp);
 }
+
+static const int number_of_betas = number_of_variables;
+static const int number_of_standard_errors = number_of_variables;
+static const int number_of_covariances = ((number_of_variables - 1) * number_of_variables) / 2;
+static const int number_of_cells = number_of_snps * number_of_traits;
+static const int number_of_values_per_cell = number_of_betas + number_of_standard_errors + number_of_covariances;
+
+void Readabel::create_fake_data_file(std::string filename)
+{
+    FILE *fp;
+    if ((fp = fopen(filename.c_str(), "wb")) == NULL)
+        return;
+
+    // Set all values of the ith cell to i.
+    double buffer[number_of_values_per_cell];
+    for (int i = 0; i < number_of_cells; i++) {
+        for (int j = 0; j < number_of_values_per_cell; j++)
+            buffer[j] = j;
+        fwrite((void *) buffer, sizeof(buffer), 1, fp);
+    }
+
+    fclose(fp);
+}

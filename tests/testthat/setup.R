@@ -1,6 +1,8 @@
 fake_file_stem <- file.path(tempdir(), "fake_file")
 fake_layout_file <- paste0(fake_file_stem, ".iout")
+fake_data_file <- paste0(fake_file_stem, ".out")
 create_fake_layout_file(fake_layout_file)
+create_fake_data_file(fake_data_file)
 x <- read_omicabel(fake_layout_file)
 
 snp_labels <- paste0("snp", 1:9)

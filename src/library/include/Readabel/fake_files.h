@@ -5,6 +5,7 @@
 
 namespace Readabel {
     void create_fake_layout_file(std::string filename);
+    void create_fake_data_file(std::string filename);
 }
 
 #endif
