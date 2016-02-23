@@ -56,11 +56,11 @@ void Readabel::create_fake_data_file(std::string filename)
     if ((fp = fopen(filename.c_str(), "wb")) == NULL)
         return;
 
-    // Set all values of the ith cell to i.
+    // Set all values of the ith cell to i (i = 1, 2, ...).
     double buffer[number_of_values_per_cell];
     for (int i = 0; i < number_of_cells; i++) {
         for (int j = 0; j < number_of_values_per_cell; j++)
-            buffer[j] = j;
+            buffer[j] = i + 1;
         fwrite((void *) buffer, sizeof(buffer), 1, fp);
     }
 
