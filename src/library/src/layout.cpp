@@ -35,6 +35,19 @@ Layout::Layout(std::string& filename)
     number_of_tile_columns_ = (number_of_snps_ - 1) / snps_per_tile_ + 1;
     number_of_tile_rows_ = (number_of_traits_ - 1) / traits_per_tile_ + 1;
     number_of_tiles_ = number_of_tile_columns_ * number_of_tile_rows_;
+    int snps_in_last_tile_column = number_of_snps_ % snps_per_tile_;
+    int traits_in_last_tile_row = number_of_traits_ % traits_per_tile_;
+
+    int size[2][2];
+    size[0][0] = snps_per_tile_ * traits_per_tile_;
+    size[0][1] = snps_per_tile_ * traits_in_last_tile_row;
+    size[1][0] = snps_in_last_tile_column * traits_per_tile_;
+    size[1][1] = snps_in_last_tile_column * traits_in_last_tile_row;
+
+    for (int tile = 0; tile < number_of_tiles_; tile++)
+        size_of_tile_.push_back(size
+            [is_in_last_tile_column(tile)]
+            [is_in_last_tile_row(tile)]);
 }
 
 static void read_labels(std::vector<std::string>& labels, int bytes_per_label, int number_of_labels, FILE *fp)
@@ -47,6 +60,16 @@ static void read_labels(std::vector<std::string>& labels, int bytes_per_label, i
         labels.push_back(std::string(start));
     }
     delete buffer;
+}
+
+bool Layout::is_in_last_tile_column(int tile)
+{
+    return (tile + 1) % number_of_tile_columns_ == 0;
+}
+
+bool Layout::is_in_last_tile_row(int tile)
+{
+    return tile >= (number_of_tile_rows_ - 1) * number_of_tile_columns_;
 }
 
 int Layout::magic_number() const
@@ -117,4 +140,9 @@ const std::vector<std::string>& Layout::trait_labels() const
 int Layout::number_of_tiles() const
 {
     return number_of_tiles_;
+}
+
+int Layout::size_of_tile(int tile) const
+{
+    return size_of_tile_[tile];;
 }

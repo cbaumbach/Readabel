@@ -22,7 +22,10 @@ namespace Readabel {
         const std::vector<std::string>& snp_labels() const;
         const std::vector<std::string>& trait_labels() const;
         int number_of_tiles() const;
+        int size_of_tile(int) const;
     private:
+        bool is_in_last_tile_column(int tile);
+        bool is_in_last_tile_row(int tile);
         int magic_number_;
         int bytes_per_double_;
         int number_of_variables_;
@@ -40,6 +43,7 @@ namespace Readabel {
         int number_of_tile_columns_;
         int number_of_tile_rows_;
         int number_of_tiles_;
+        std::vector<int> size_of_tile_;
     };
 }
 

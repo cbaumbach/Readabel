@@ -64,4 +64,14 @@ TEST_CASE("Initialize a Layout object from a layout file", "[Layout]") {
     SECTION("number_of_tiles") {
         REQUIRE(layout.number_of_tiles() == 9);
     }
+    SECTION("size_of_tile") {
+        const int size[] = {
+            //   snps
+            4*3, 4*3, 1*3,
+            4*3, 4*3, 1*3,  // traits
+            4*1, 4*1, 1*1,
+        };
+        for (int tile = 0; tile < layout.number_of_tiles(); tile++)
+            REQUIRE(layout.size_of_tile(tile) == size[tile]);
+    }
 }
