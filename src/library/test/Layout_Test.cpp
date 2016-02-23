@@ -58,3 +58,11 @@ TEST_CASE("Initialize a Layout object from a layout file", "[Layout]") {
     REQUIRE(trait_labels[4] == "trait5");
     REQUIRE(trait_labels[5] == "trait6");
 }
+
+TEST_CASE("tile related methods", "[tiles]") {
+    std::string fake_layout_file("build/fake_layout_file.iout");
+    create_fake_layout_file(fake_layout_file);
+    Layout layout(fake_layout_file);
+
+    REQUIRE(layout.number_of_tiles() == 9);
+}

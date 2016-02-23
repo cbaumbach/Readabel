@@ -109,3 +109,9 @@ const std::vector<std::string>& Layout::trait_labels() const
 {
     return trait_labels_;
 }
+
+int Layout::number_of_tiles() const
+{
+    return ((number_of_snps_ - 1) / snps_per_tile_ + 1)
+        * ((number_of_traits_ - 1) / traits_per_tile_ + 1);
+}

@@ -21,6 +21,7 @@ namespace Readabel {
         const std::vector<std::string>& cov_labels() const;
         const std::vector<std::string>& snp_labels() const;
         const std::vector<std::string>& trait_labels() const;
+        int number_of_tiles() const;
     private:
         int magic_number_;
         int bytes_per_double_;
