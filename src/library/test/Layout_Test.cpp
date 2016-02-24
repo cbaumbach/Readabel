@@ -6,10 +6,30 @@
 
 using namespace Readabel;
 
-TEST_CASE("Initialize a Layout object from a layout file", "[Layout]") {
-    std::string fake_layout_file("build/fake_layout_file.iout");
+TEST_CASE("Initialize a Layout object from a layout file and a data file", "[Layout]") {
+    // =========  LAYOUT OF FAKE DATA FILE  =========
+    //
+    //                        snps
+    //
+    //              0  1  2  3    4  5  6  7    8
+    //           +--------------------------------+
+    //         0 |  0  1  2  3 | 12 13 14 15 | 24 |
+    //         1 |  4  5  6  7 | 16 17 18 19 | 25 |
+    //         2 |  8  9 10 11 | 20 21 22 23 | 26 |
+    //           |-------------+-------------+----|
+    // traits  3 | 27 28 29 30 | 39 40 41 42 | 51 |
+    //         4 | 31 32 33 34 | 43 44 45 46 | 52 |
+    //         5 | 35 36 37 38 | 47 48 49 50 | 53 |
+    //           |-------------+-------------+----|
+    //         6 | 54 55 56 57 | 58 59 60 61 | 62 |
+    //           +--------------------------------+
+
+    std::string fake_file_stem("build/fake_file");
+    std::string fake_layout_file(fake_file_stem + ".iout");
+    std::string fake_data_file(fake_file_stem + ".out");
     create_fake_layout_file(fake_layout_file);
-    Layout layout(fake_layout_file);
+    create_fake_data_file(fake_data_file);
+    Layout layout(fake_layout_file, fake_data_file);
 
     SECTION("layout parameters") {
         REQUIRE(layout.magic_number() == 6);
