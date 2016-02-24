@@ -1,4 +1,4 @@
-Package: readabel
+Package: Readabel
 Type: Package
 Title: Accessing binary output files from ABEL suite
 Description: Accessing binary output files from ABEL suite
