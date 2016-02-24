@@ -45,7 +45,7 @@ Layout::Layout(std::string& filename)
     size[1][1] = snps_in_last_tile_column * traits_in_last_tile_row;
 
     for (int tile = 0; tile < number_of_tiles_; tile++)
-        size_of_tile_.push_back(size
+        number_of_cells_.push_back(size
             [is_in_last_tile_column(tile)]
             [is_in_last_tile_row(tile)]);
 }
@@ -142,7 +142,7 @@ int Layout::number_of_tiles() const
     return number_of_tiles_;
 }
 
-int Layout::size_of_tile(int tile) const
+int Layout::number_of_cells(int tile) const
 {
-    return size_of_tile_[tile];;
+    return number_of_cells_[tile];;
 }
