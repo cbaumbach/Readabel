@@ -11,7 +11,7 @@ setGeneric("names")
 #' @param x An object of class Readabel.
 #' @export
 setMethod("names", "Readabel", function(x) {
-    .Call("Layout__names", x@pointer)
+    .Call("rcpp_names", x@pointer)
 })
 
 #' Return a new Readabel object.
@@ -19,7 +19,7 @@ setMethod("names", "Readabel", function(x) {
 #' @param x An uninitialized object of class Readabel
 #' @param filename The path to a binary OmicABEL output file
 setMethod("initialize", "Readabel", function(.Object, filename) {
-    .Object@pointer <- .Call("Layout__new", filename)
+    .Object@pointer <- .Call("rcpp_new", filename)
     .Object
 })
 
@@ -38,7 +38,7 @@ setGeneric("nrow")
 #' @param x An object of class Readabel
 #' @export
 setMethod("nrow", "Readabel", function(x) {
-    .Call("Layout__nrow", x@pointer)
+    .Call("rcpp_nrow", x@pointer)
 })
 
 setGeneric("ncol")
@@ -68,7 +68,7 @@ setGeneric("snpNames", function(x) standardGeneric("snpNames"))
 #' @param x An object of class Readabel
 #' @export
 setMethod("snpNames", "Readabel", function(x) {
-    .Call("Layout__snpNames", x@pointer)
+    .Call("rcpp_snpNames", x@pointer)
 })
 
 setGeneric("traitNames", function(x) standardGeneric("traitNames"))
@@ -78,5 +78,5 @@ setGeneric("traitNames", function(x) standardGeneric("traitNames"))
 #' @param x An object of class Readabel
 #' @export
 setMethod("traitNames", "Readabel", function(x) {
-    .Call("Layout__traitNames", x@pointer)
+    .Call("rcpp_traitNames", x@pointer)
 })

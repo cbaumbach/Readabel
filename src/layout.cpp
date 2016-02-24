@@ -3,13 +3,13 @@
 #include <string>
 #include "Readabel/layout.h"
 
-RcppExport SEXP Layout__new(SEXP filenames)
+RcppExport SEXP rcpp_new(SEXP filenames)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(new Readabel::Layout(Rcpp::as< std::vector<std::string> >(filenames)[0]), true);
     return ptr;
 }
 
-RcppExport SEXP Layout__names(SEXP xp)
+RcppExport SEXP rcpp_names(SEXP xp)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     Rcpp::CharacterVector trait_and_snp = Rcpp::CharacterVector::create("trait", "snp");
@@ -32,7 +32,7 @@ RcppExport SEXP Layout__names(SEXP xp)
     return names;
 }
 
-RcppExport SEXP Layout__nrow(SEXP xp)
+RcppExport SEXP rcpp_nrow(SEXP xp)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     int number_of_snps = ptr->number_of_snps();
@@ -41,7 +41,7 @@ RcppExport SEXP Layout__nrow(SEXP xp)
     return Rcpp::wrap(number_of_snps * number_of_traits);
 }
 
-RcppExport SEXP Layout__snpNames(SEXP xp)
+RcppExport SEXP rcpp_snpNames(SEXP xp)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     Rcpp::CharacterVector snp_labels(Rcpp::wrap(ptr->snp_labels()));
@@ -49,7 +49,7 @@ RcppExport SEXP Layout__snpNames(SEXP xp)
     return snp_labels;
 }
 
-RcppExport SEXP Layout__traitNames(SEXP xp)
+RcppExport SEXP rcpp_traitNames(SEXP xp)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     Rcpp::CharacterVector trait_labels(Rcpp::wrap(ptr->trait_labels()));
