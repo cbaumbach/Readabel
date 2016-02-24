@@ -8,6 +8,7 @@ namespace Readabel {
     class Layout {
     public:
         Layout(const std::string& layout_file, const std::string& data_file);
+        ~Layout();
         int magic_number() const;
         int bytes_per_double() const;
         int number_of_variables() const;
@@ -23,6 +24,7 @@ namespace Readabel {
         const std::vector<std::string>& trait_labels() const;
         int number_of_tiles() const;
         int number_of_cells(int tile) const;
+        std::vector<double>* column(const std::string& name) const;
         const std::string& find_snp_in_cell(int cell);
         const std::string& find_trait_in_cell(int cell);
         std::vector<std::string>* snp_column();
@@ -46,11 +48,15 @@ namespace Readabel {
         std::vector<std::string> cov_labels_;
         std::vector<std::string> snp_labels_;
         std::vector<std::string> trait_labels_;
+        std::vector<std::string> column_labels_;
         // Tile related.
         int number_of_tile_columns_;
         int number_of_tile_rows_;
         int number_of_tiles_;
         std::vector<int> number_of_cells_;
+        int number_of_doubles_per_cell_;
+        int max_number_of_cells_per_tile_;
+        double *cell_buffer_;
         std::string* snp_in_cell_;
         std::string* trait_in_cell_;
     };
