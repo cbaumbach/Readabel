@@ -74,4 +74,40 @@ TEST_CASE("Initialize a Layout object from a layout file", "[Layout]") {
         for (int tile = 0; tile < layout.number_of_tiles(); tile++)
             REQUIRE(layout.number_of_cells(tile) == size[tile]);
     }
+    SECTION("find_snp_in_cell") {
+        const int index_of_snp_in_cell[] = {
+            0, 1, 2, 3,  0, 1, 2, 3,  0, 1, 2, 3,  // tile 1
+            4, 5, 6, 7,  4, 5, 6, 7,  4, 5, 6, 7,  // tile 2
+            8,           8,           8,           // tile 3
+            0, 1, 2, 3,  0, 1, 2, 3,  0, 1, 2, 3,  // tile 4
+            4, 5, 6, 7,  4, 5, 6, 7,  4, 5, 6, 7,  // tile 5
+            8,           8,           8,           // tile 6
+            0, 1, 2, 3,                            // tile 7
+            4, 5, 6, 7,                            // tile 8
+            8,                                     // tile 9
+        };
+        const std::vector<std::string>& snps = layout.snp_labels();
+
+        int number_of_cells = layout.number_of_snps() * layout.number_of_traits();
+        for (int cell = 0; cell < number_of_cells; cell++)
+            REQUIRE(layout.find_snp_in_cell(cell) == snps[index_of_snp_in_cell[cell]]);
+    }
+    SECTION("find_trait_in_cell") {
+        const int index_of_trait_in_cell[] = {
+            0, 0, 0, 0,  1, 1, 1, 1,  2, 2, 2, 2,  // tile 1
+            0, 0, 0, 0,  1, 1, 1, 1,  2, 2, 2, 2,  // tile 2
+            0,           1,           2,           // tile 2
+            3, 3, 3, 3,  4, 4, 4, 4,  5, 5, 5, 5,  // tile 3
+            3, 3, 3, 3,  4, 4, 4, 4,  5, 5, 5, 5,  // tile 4
+            3,           4,           5,           // tile 5
+            6, 6, 6, 6,                            // tile 6
+            6, 6, 6, 6,                            // tile 7
+            6,                                     // tile 8
+        };
+        const std::vector<std::string>& traits = layout.trait_labels();
+
+        int number_of_cells = layout.number_of_snps() * layout.number_of_traits();
+        for (int cell = 0; cell < number_of_cells; cell++)
+            REQUIRE(layout.find_trait_in_cell(cell) == traits[index_of_trait_in_cell[cell]]);
+    }
 }

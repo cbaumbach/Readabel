@@ -23,9 +23,14 @@ namespace Readabel {
         const std::vector<std::string>& trait_labels() const;
         int number_of_tiles() const;
         int number_of_cells(int) const;
+        const std::string& find_snp_in_cell(int cell);
+        const std::string& find_trait_in_cell(int cell);
+        std::vector<std::string>* snp_column();
+        std::vector<std::string>* trait_column();
     private:
         bool is_in_last_tile_column(int tile);
         bool is_in_last_tile_row(int tile);
+        void find_in_cell(int cell);
         int magic_number_;
         int bytes_per_double_;
         int number_of_variables_;
@@ -44,6 +49,8 @@ namespace Readabel {
         int number_of_tile_rows_;
         int number_of_tiles_;
         std::vector<int> number_of_cells_;
+        std::string* snp_in_cell_;
+        std::string* trait_in_cell_;
     };
 }
 

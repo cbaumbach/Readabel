@@ -146,3 +146,70 @@ int Layout::number_of_cells(int tile) const
 {
     return number_of_cells_[tile];;
 }
+
+std::vector<std::string>* Layout::snp_column()
+{
+    std::vector<std::string>* column = new std::vector<std::string>;
+    int number_of_cells = number_of_snps_ * number_of_traits_;
+    for (int cell = 0; cell < number_of_cells; cell++)
+        column->push_back(find_snp_in_cell(cell));
+
+    return column;
+}
+
+std::vector<std::string>* Layout::trait_column()
+{
+    std::vector<std::string>* column = new std::vector<std::string>;
+    int number_of_cells = number_of_snps_ * number_of_traits_;
+    for (int cell = 0; cell < number_of_cells; cell++)
+        column->push_back(find_trait_in_cell(cell));
+
+    return column;
+}
+
+const std::string& Layout::find_snp_in_cell(int cell)
+{
+    find_in_cell(cell);
+    return *snp_in_cell_;
+}
+
+const std::string& Layout::find_trait_in_cell(int cell)
+{
+    find_in_cell(cell);
+    return *trait_in_cell_;
+}
+
+void Layout::find_in_cell(int cell)
+{
+    int x = cell;
+
+    // Find tile row.
+    int cells_per_tile_row = number_of_snps_ * traits_per_tile_;
+    int tile_row = x / cells_per_tile_row;
+    x %= cells_per_tile_row;
+
+    // Find tile column.
+    int cells_per_tile;
+    if (traits_per_tile_ <= number_of_traits_ - tile_row * traits_per_tile_)
+        cells_per_tile = snps_per_tile_ * traits_per_tile_;
+    else
+        cells_per_tile = snps_per_tile_
+            * (number_of_traits_ - tile_row * traits_per_tile_);
+    int tile_col = x / cells_per_tile;
+    x %= cells_per_tile;
+
+    // Find row within tile.
+    int snps_in_this_tile;
+    if (snps_per_tile_ <= number_of_snps_ - tile_col * snps_per_tile_)
+        snps_in_this_tile = snps_per_tile_;
+    else
+        snps_in_this_tile = number_of_snps_ - tile_col * snps_per_tile_;
+    int row_within_tile = x / snps_in_this_tile;
+    x %= snps_in_this_tile;
+
+    // Find column within tile.
+    int column_within_tile = x;
+
+    snp_in_cell_ = &snp_labels_[tile_col * snps_per_tile_ + column_within_tile];
+    trait_in_cell_ = &trait_labels_[tile_row * traits_per_tile_ + row_within_tile];
+}
