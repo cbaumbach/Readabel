@@ -73,7 +73,7 @@ static void read_labels(std::vector<std::string>& labels, int bytes_per_label, i
         const char *start = buffer + i * bytes_per_label;
         labels.push_back(std::string(start));
     }
-    delete buffer;
+    delete[] buffer;
 }
 
 bool Layout::is_in_last_tile_column(int tile) const
