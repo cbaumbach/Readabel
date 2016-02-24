@@ -3,9 +3,10 @@
 #include <string>
 #include "Readabel/layout.h"
 
-RcppExport SEXP rcpp_new(SEXP filenames)
+RcppExport SEXP rcpp_new(SEXP layout_file, SEXP data_file)
 {
-    Rcpp::XPtr<Readabel::Layout> ptr(new Readabel::Layout(Rcpp::as< std::vector<std::string> >(filenames)[0]), true);
+    Rcpp::XPtr<Readabel::Layout> ptr(new Readabel::Layout(Rcpp::as<std::string>(layout_file), Rcpp::as<std::string>(data_file)), true);
+
     return ptr;
 }
 

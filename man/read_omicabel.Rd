@@ -4,10 +4,12 @@
 \alias{read_omicabel}
 \title{Read a binary OmicABEL file.}
 \usage{
-read_omicabel(filename)
+read_omicabel(layout_file, data_file)
 }
 \arguments{
-\item{filename}{The path to the file.}
+\item{layout_file}{Path to layout file.}
+
+\item{data_file}{Path to data file.}
 }
 \description{
 Read a binary OmicABEL file.

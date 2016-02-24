@@ -17,18 +17,20 @@ setMethod("names", "Readabel", function(x) {
 #' Return a new Readabel object.
 #'
 #' @param x An uninitialized object of class Readabel
-#' @param filename The path to a binary OmicABEL output file
-setMethod("initialize", "Readabel", function(.Object, filename) {
-    .Object@pointer <- .Call("rcpp_new", filename, PACKAGE = "Readabel")
+#' @param layout_file Path to layout file
+#' @param data_file Path to data file
+setMethod("initialize", "Readabel", function(.Object, layout_file, data_file) {
+    .Object@pointer <- .Call("rcpp_new", layout_file, data_file, PACKAGE = "Readabel")
     .Object
 })
 
 #' Read a binary OmicABEL file.
 #'
-#' @param filename The path to the file.
+#' @param layout_file Path to layout file.
+#' @param data_file Path to data file.
 #' @export
-read_omicabel <- function(filename) {
-    new("Readabel", filename)
+read_omicabel <- function(layout_file, data_file) {
+    new("Readabel", layout_file, data_file)
 }
 
 setGeneric("nrow")

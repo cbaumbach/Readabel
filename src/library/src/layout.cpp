@@ -6,10 +6,11 @@ using namespace Readabel;
 
 static void read_labels(std::vector<std::string>& labels, int bytes_per_label, int number_of_labels, FILE *fp);
 
-Layout::Layout(std::string& filename)
+Layout::Layout(const std::string& layout_file, const std::string& data_file)
+    : layout_file_(layout_file), data_file_(data_file)
 {
     FILE *fp;
-    if ((fp = fopen(filename.c_str(), "rb")) == NULL)
+    if ((fp = fopen(layout_file_.c_str(), "rb")) == NULL)
         return;
 
     int numbers[8];

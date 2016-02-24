@@ -5,10 +5,12 @@
 \alias{initialize,Readabel-method}
 \title{Return a new Readabel object.}
 \usage{
-\S4method{initialize}{Readabel}(.Object, filename)
+\S4method{initialize}{Readabel}(.Object, layout_file, data_file)
 }
 \arguments{
-\item{filename}{The path to a binary OmicABEL output file}
+\item{layout_file}{Path to layout file}
+
+\item{data_file}{Path to data file}
 
 \item{x}{An uninitialized object of class Readabel}
 }

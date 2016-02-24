@@ -7,7 +7,7 @@
 namespace Readabel {
     class Layout {
     public:
-        Layout(std::string& filename);
+        Layout(const std::string& layout_file, const std::string& data_file);
         int magic_number() const;
         int bytes_per_double() const;
         int number_of_variables() const;
@@ -31,6 +31,8 @@ namespace Readabel {
         bool is_in_last_tile_column(int tile);
         bool is_in_last_tile_row(int tile);
         void find_in_cell(int cell);
+        std::string layout_file_;
+        std::string data_file_;
         int magic_number_;
         int bytes_per_double_;
         int number_of_variables_;
