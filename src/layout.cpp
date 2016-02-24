@@ -57,3 +57,24 @@ RcppExport SEXP rcpp_traitNames(SEXP xp)
 
     return trait_labels;
 }
+
+RcppExport SEXP rcpp_get_numeric_column(SEXP xp, SEXP name)
+{
+    Rcpp::XPtr<Readabel::Layout> ptr(xp);
+
+    return Rcpp::wrap(*ptr->column(Rcpp::as<std::string>(name)));
+}
+
+RcppExport SEXP rcpp_get_snp_column(SEXP xp)
+{
+    Rcpp::XPtr<Readabel::Layout> ptr(xp);
+
+    return Rcpp::wrap(*ptr->snp_column());
+}
+
+RcppExport SEXP rcpp_get_trait_column(SEXP xp)
+{
+    Rcpp::XPtr<Readabel::Layout> ptr(xp);
+
+    return Rcpp::wrap(*ptr->trait_column());
+}

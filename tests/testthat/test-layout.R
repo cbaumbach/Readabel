@@ -23,3 +23,12 @@ test_that("snpNames", {
 test_that("traitNames", {
     expect_equal(traitNames(x), trait_labels)
 })
+
+test_that("$", {
+    expect_equal(nrow(x), length(x$beta_snp))
+    expect_true(all(x$beta_snp %in% 1:nrow(x)))
+    expect_equal(x$beta_snp, x$beta_sex)
+    expect_equal(snp_column, x$snp)
+    expect_equal(trait_column, x$trait)
+    expect_error(x$foobar)
+})

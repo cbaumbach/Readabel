@@ -3,6 +3,7 @@
 export(create_fake_data_file)
 export(create_fake_layout_file)
 export(read_omicabel)
+exportMethods("$")
 exportMethods(dim)
 exportMethods(names)
 exportMethods(ncol)
