@@ -30,8 +30,8 @@ namespace Readabel {
         std::vector<std::string>* snp_column();
         std::vector<std::string>* trait_column();
     private:
-        bool is_in_last_tile_column(int tile);
-        bool is_in_last_tile_row(int tile);
+        bool is_in_last_tile_column(int tile) const;
+        bool is_in_last_tile_row(int tile) const;
         void find_in_cell(int cell);
         std::string layout_file_;
         std::string data_file_;

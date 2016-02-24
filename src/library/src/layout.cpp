@@ -76,12 +76,12 @@ static void read_labels(std::vector<std::string>& labels, int bytes_per_label, i
     delete buffer;
 }
 
-bool Layout::is_in_last_tile_column(int tile)
+bool Layout::is_in_last_tile_column(int tile) const
 {
     return (tile + 1) % number_of_tile_columns_ == 0;
 }
 
-bool Layout::is_in_last_tile_row(int tile)
+bool Layout::is_in_last_tile_row(int tile) const
 {
     return tile >= (number_of_tile_rows_ - 1) * number_of_tile_columns_;
 }
