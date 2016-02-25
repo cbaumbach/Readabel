@@ -126,12 +126,16 @@ setGeneric("[")
 #'             be a data frame.
 #' @export
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
-    extract_column <- function(column) {
-        x[[column]]
+    make_data_frame_from_columns <- function(columns) {
+        d <- data.frame(lapply(columns, function(col) x[[col]]), stringsAsFactors = FALSE)
+        names(d) <- columns
+        d
     }
-    if (missing(i)) {
-        result <- data.frame(lapply(j, extract_column), stringsAsFactors = FALSE)
-        names(result) <- j
-        return(result)
+    result <- NULL
+    if (missing(i) && missing(j)) {
+        result <- make_data_frame_from_columns(names(x))
+    } else if (missing(i) && !missing(j)) {
+        result <- make_data_frame_from_columns(j)
     }
+    result
 })
