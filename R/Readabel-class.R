@@ -139,5 +139,5 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
         return(make_data_frame_from_columns(j))
     if (!missing(i) && missing(j))
         return(x[][i, ])
-    return(NULL)
+    return(x[, j][i, ])
 })
