@@ -127,9 +127,11 @@ setGeneric("[")
 #' @export
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     make_data_frame_from_columns <- function(columns) {
+        if (is.numeric(columns))
+            columns <- names(x)[columns]
         d <- data.frame(lapply(columns, function(col) x[[col]]), stringsAsFactors = FALSE)
         names(d) <- columns
-        d
+        d[,, drop]
     }
     if (missing(i) && missing(j))
         return(make_data_frame_from_columns(names(x)))

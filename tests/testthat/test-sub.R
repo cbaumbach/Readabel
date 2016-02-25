@@ -16,6 +16,14 @@ test_that("x[, c(\"snp\", \"beta_snp\"), drop = FALSE]", {
                  x[, c("snp", "beta_snp"), drop = FALSE])
 })
 
+test_that("x[, 2]", {
+    expect_equal(d[, 2], x[, 2])
+})
+
+test_that("x[, 2:3]", {
+    expect_equal(d[, 2:3], x[, 2:3])
+})
+
 test_that("x[]", {
     expect_equal(d[], x[])
 })
