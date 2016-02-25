@@ -163,3 +163,13 @@ setGeneric("tail")
 setMethod("tail", "Readabel", function(x, n = 6L) {
     x[][-seq_len(nrow(x) - n), ]
 })
+
+setGeneric("colnames")
+
+#' Return the column names of a Readabel object
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("colnames", "Readabel", function(x) {
+    names(x)
+})

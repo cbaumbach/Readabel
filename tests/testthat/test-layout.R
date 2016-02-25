@@ -42,3 +42,7 @@ test_that("tail", {
     expect_equal(tail(d), tail(x))
     expect_equal(tail(d, 2), tail(x, 2))
 })
+
+test_that("colnames", {
+    expect_equal(names(x), colnames(x))
+})
