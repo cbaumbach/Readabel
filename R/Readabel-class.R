@@ -88,9 +88,11 @@ setGeneric("[[")
 #' Return a given column
 #'
 #' @param x An object of class Readabel
-#' @param i A column name
+#' @param i Column name or column index
 #' @export
 setMethod("[[", "Readabel", function(x, i) {
+    if (is.numeric(i))
+        i <- names(x)[[i]]
     if (! i %in% names(x))
         stop("invalid column: ", i)
     if (i == "trait")

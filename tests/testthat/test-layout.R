@@ -35,5 +35,6 @@ test_that("$", {
 
 test_that("[[", {
     expect_equal(x$beta_snp, x[["beta_snp"]])
+    expect_equal(x[["trait"]], x[[which(names(x) == "trait")]])
     expect_error(x[["foobar"]])
 })

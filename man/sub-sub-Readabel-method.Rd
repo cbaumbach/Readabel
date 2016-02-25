@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{An object of class Readabel}
 
-\item{i}{A column name}
+\item{i}{Column name or column index}
 }
 \description{
 Return a given column
