@@ -37,3 +37,8 @@ test_that("head", {
     expect_equal(head(d), head(x))
     expect_equal(head(d, 2), head(x, 2))
 })
+
+test_that("tail", {
+    expect_equal(tail(d), tail(x))
+    expect_equal(tail(d, 2), tail(x, 2))
+})

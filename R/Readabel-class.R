@@ -152,3 +152,14 @@ setGeneric("head")
 setMethod("head", "Readabel", function(x, n = 6L) {
     x[][seq_len(n), ]
 })
+
+setGeneric("tail")
+
+#' Return the last few rows of a Readabel object
+#'
+#' @param x An object of class Readabel
+#' @param n Number of rows to return
+#' @export
+setMethod("tail", "Readabel", function(x, n = 6L) {
+    x[][-seq_len(nrow(x) - n), ]
+})
