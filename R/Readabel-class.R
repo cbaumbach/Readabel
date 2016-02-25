@@ -113,3 +113,25 @@ setGeneric("$")
 setMethod("$", "Readabel", function(x, name) {
     x[[name]]
 })
+
+setGeneric("[")
+
+#' Extract a subset of rows and columns
+#'
+#' @param x An object of class Readabel
+#' @param i Row name or row index (logical or numeric)
+#' @param j Column name or column index (logical or numeric)
+#' @param drop If TRUE (default) the result will be coerced to the
+#'             lowest possible dimension.  Otherwise the result will
+#'             be a data frame.
+#' @export
+setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
+    extract_column <- function(column) {
+        x[[column]]
+    }
+    if (missing(i)) {
+        result <- data.frame(lapply(j, extract_column), stringsAsFactors = FALSE)
+        names(result) <- j
+        return(result)
+    }
+})
