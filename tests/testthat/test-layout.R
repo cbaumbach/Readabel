@@ -58,3 +58,7 @@ test_that("row.names", {
     expect_equal(all_rows, row.names(x))
     expect_equal(all_rows[c(TRUE, FALSE)], row.names(x[c(TRUE, FALSE), ]))
 })
+
+test_that("dimnames", {
+    expect_equal(list(rownames(x), colnames(x)), dimnames(x))
+})

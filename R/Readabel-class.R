@@ -193,3 +193,13 @@ setGeneric("row.names")
 setMethod("row.names", "Readabel", function(x) {
     rownames(x)
 })
+
+setGeneric("dimnames")
+
+#' Return set of dimnames of a Readabel object
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("dimnames", "Readabel", function(x) {
+    list(rownames(x), colnames(x))
+})
