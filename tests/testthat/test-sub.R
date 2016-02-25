@@ -46,3 +46,7 @@ test_that("x[c(3,6), c(2,7)]", {
 test_that("x[c(TRUE, FALSE), ]", {
     expect_equal(d[c(TRUE, FALSE), ], x[c(TRUE, FALSE), ])
 })
+
+test_that("x[, c(TRUE, FALSE)]", {
+    expect_equal(d[, c(TRUE, FALSE)], x[, c(TRUE, FALSE)])
+})
