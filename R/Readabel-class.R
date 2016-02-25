@@ -131,11 +131,11 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
         names(d) <- columns
         d
     }
-    result <- NULL
-    if (missing(i) && missing(j)) {
-        result <- make_data_frame_from_columns(names(x))
-    } else if (missing(i) && !missing(j)) {
-        result <- make_data_frame_from_columns(j)
-    }
-    result
+    if (missing(i) && missing(j))
+        return(make_data_frame_from_columns(names(x)))
+    if (missing(i) && !missing(j))
+        return(make_data_frame_from_columns(j))
+    if (!missing(i) && missing(j))
+        return(x[][i, ])
+    return(NULL)
 })

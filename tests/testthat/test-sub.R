@@ -23,3 +23,8 @@ test_that("x[]", {
 test_that("x[,]", {
     expect_equal(x[], x[, ])
 })
+
+test_that("x[c(2,5), ]", {
+    rows <- c(2,5)
+    expect_equal(d[rows, ], x[rows, ])
+})
