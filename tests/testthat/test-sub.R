@@ -51,6 +51,11 @@ test_that("x[, c(TRUE, FALSE)]", {
     expect_equal(d[, c(TRUE, FALSE)], x[, c(TRUE, FALSE)])
 })
 
+test_that("x[, character()]", {
+    skip("needed for compatibility with [.data.frame but not crucial")
+    expect_equal(d[, character()], x[, character()])
+})
+
 test_that("x[integer(), ]", {
     expect_equal(d[integer(), ], x[integer(), ])
 })
