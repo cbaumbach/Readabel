@@ -203,3 +203,29 @@ setGeneric("dimnames")
 setMethod("dimnames", "Readabel", function(x) {
     list(rownames(x), colnames(x))
 })
+
+setGeneric("print")
+
+#' Print representation of a Readabel object
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("print", "Readabel", function(x) {
+    number_of_traits <- length(traitNames(x))
+    number_of_snps <- length(snpNames(x))
+    covariates <- sub("beta_", "", grep("^beta", names(x), ignore.case = TRUE, value = TRUE), ignore.case = TRUE)
+    cat("traits: ", number_of_traits, "  ",
+        "snps: ", number_of_snps, "  ",
+        "covariates: ", paste(covariates, collapse = " "),
+        "\n", sep = "")
+})
+
+setGeneric("show")
+
+#' Print representation of a Readabel object
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("show", "Readabel", function(x) {
+    print(x)
+})
