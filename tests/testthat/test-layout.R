@@ -32,3 +32,8 @@ test_that("$", {
     expect_equal(trait_column, x$trait)
     expect_error(x$foobar)
 })
+
+test_that("head", {
+    expect_equal(head(d), head(x))
+    expect_equal(head(d, 2), head(x, 2))
+})

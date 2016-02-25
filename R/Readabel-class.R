@@ -141,3 +141,14 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
         return(x[][i, ])
     return(x[, j][i, ])
 })
+
+setGeneric("head")
+
+#' Return the first few rows of a Readabel object
+#'
+#' @param x An object of class Readabel
+#' @param n Number of rows to return
+#' @export
+setMethod("head", "Readabel", function(x, n = 6L) {
+    x[][seq_len(n), ]
+})
