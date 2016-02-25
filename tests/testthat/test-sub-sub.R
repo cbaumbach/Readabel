@@ -2,11 +2,6 @@ source("setup.R")
 
 context("[[")
 
-# Full dataset.
-d <- data.frame(lapply(names(x), function(name) x[[name]]), stringsAsFactors = FALSE)
-names(d) <- names(x)
-numeric_columns <- setdiff(names(x), c("trait", "snp"))
-
 test_that("columns can be accessed by name", {
     for (column in names(x))
         expect_equal(d[[column]], x[[column]])

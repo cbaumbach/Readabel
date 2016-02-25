@@ -22,6 +22,11 @@ create_fake_layout_file(fake_layout_file)
 create_fake_data_file(fake_data_file)
 x <- read_omicabel(fake_layout_file, fake_data_file)
 
+# Full dataset.
+d <- data.frame(lapply(names(x), function(name) x[[name]]), stringsAsFactors = FALSE)
+names(d) <- names(x)
+numeric_columns <- setdiff(names(x), c("trait", "snp"))
+
 snp_labels <- paste0("snp", 1:9)
 trait_labels <- paste0("trait", 1:7)
 covariates <- c("intercept", "sex", "snp")
