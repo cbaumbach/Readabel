@@ -46,3 +46,15 @@ test_that("tail", {
 test_that("colnames", {
     expect_equal(names(x), colnames(x))
 })
+
+test_that("rownames", {
+    all_rows <- as.character(1:nrow(x))
+    expect_equal(all_rows, rownames(x))
+    expect_equal(all_rows[c(TRUE, FALSE)], rownames(x[c(TRUE, FALSE), ]))
+})
+
+test_that("row.names", {
+    all_rows <- as.character(1:nrow(x))
+    expect_equal(all_rows, row.names(x))
+    expect_equal(all_rows[c(TRUE, FALSE)], row.names(x[c(TRUE, FALSE), ]))
+})
