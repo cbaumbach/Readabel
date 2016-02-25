@@ -34,7 +34,20 @@ test_that("$", {
 })
 
 test_that("[[", {
-    expect_equal(x$beta_snp, x[["beta_snp"]])
-    expect_equal(x[["trait"]], x[[which(names(x) == "trait")]])
+    numeric_columns <- setdiff(names(x), c("trait", "snp"))
+    first_numeric_column <- x[[numeric_columns[1]]]
+    expect_equal(nrow(x), length(first_numeric_column))
+    expect_true(all(first_numeric_column %in% 1:nrow(x)))
+    numeric
+    for (name in numeric_columns) {
+        expect_equal(first_numeric_column, x[[name]])
+        expect_equal(first_numeric_column, x[[which(names(x) == name)]])
+    }
+    expect_equal(snp_column, x[["snp"]])
+    expect_equal(trait_column, x[["trait"]])
+    expect_equal(snp_column, x[[which(names(x) == "snp")]])
+    expect_equal(trait_column, x[[which(names(x) == "trait")]])
     expect_error(x[["foobar"]])
+    expect_error(x[[-1]])
+    expect_error(x[[999]])
 })
