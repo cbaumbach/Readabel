@@ -57,6 +57,7 @@ $(library): $(objects)
 	$(MKDIR) -p $(lib_directory)
 	$(AR) $(ARFLAGS) $@ $^ >/dev/null
 
+$(build_directory)/%.o: CXXFLAGS += -Wno-parentheses
 $(build_directory)/%.o: $(test_directory)/%.cpp
 	$(call make-object-file)
 
