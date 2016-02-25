@@ -1,7 +1,7 @@
 # ==== GENERAL COMPILE AND LINK TIME VARIABLES =======================
 
 CXX := g++
-CXXFLAGS += -g -Wall -Wextra
+CXXFLAGS += -g -Wall -Wextra -fPIC
 CPPFLAGS += -I include
 
 # ==== MACROS ========================================================
