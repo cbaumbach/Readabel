@@ -32,3 +32,8 @@ test_that("$", {
     expect_equal(trait_column, x$trait)
     expect_error(x$foobar)
 })
+
+test_that("[[", {
+    expect_equal(x$beta_snp, x[["beta_snp"]])
+    expect_error(x[["foobar"]])
+})

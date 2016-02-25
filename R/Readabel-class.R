@@ -100,3 +100,21 @@ setMethod("$", "Readabel", function(x, name) {
     else
         .Call("rcpp_get_numeric_column", x@pointer, name, PACKAGE = "Readabel")
 })
+
+setGeneric("[[")
+
+#' Return a given column
+#'
+#' @param x An object of class Readabel
+#' @param i A column name
+#' @export
+setMethod("[[", "Readabel", function(x, i) {
+    if (! i %in% names(x))
+        stop("invalid column: ", i)
+    if (i == "trait")
+        .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel")
+    else if (i == "snp")
+        .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel")
+    else
+        .Call("rcpp_get_numeric_column", x@pointer, i, PACKAGE = "Readabel")
+})
