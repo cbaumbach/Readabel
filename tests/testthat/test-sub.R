@@ -42,3 +42,7 @@ test_that("x[c(3,6), c(2,7)]", {
     cols <- c(2,7)
     expect_equal(d[rows, cols], x[rows, cols])
 })
+
+test_that("x[c(TRUE, FALSE), ]", {
+    expect_equal(d[c(TRUE, FALSE), ], x[c(TRUE, FALSE), ])
+})
