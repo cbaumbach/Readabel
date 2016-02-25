@@ -181,20 +181,20 @@ std::vector<double>* Layout::column(const std::string& name) const
 
 std::vector<std::string>* Layout::snp_column()
 {
-    std::vector<std::string>* column = new std::vector<std::string>;
-    int number_of_cells = number_of_snps_ * number_of_traits_;
-    for (int cell = 0; cell < number_of_cells; cell++)
-        column->push_back(find_snp_in_cell(cell));
-
-    return column;
+    return string_column(&Layout::find_snp_in_cell);
 }
 
 std::vector<std::string>* Layout::trait_column()
 {
+    return string_column(&Layout::find_trait_in_cell);
+}
+
+std::vector<std::string>* Layout::string_column(const std::string& (Layout::*find_thing_in_cell)(int))
+{
     std::vector<std::string>* column = new std::vector<std::string>;
     int number_of_cells = number_of_snps_ * number_of_traits_;
     for (int cell = 0; cell < number_of_cells; cell++)
-        column->push_back(find_trait_in_cell(cell));
+        column->push_back((this->*find_thing_in_cell)(cell));
 
     return column;
 }

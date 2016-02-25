@@ -33,6 +33,7 @@ namespace Readabel {
         bool is_in_last_tile_column(int tile) const;
         bool is_in_last_tile_row(int tile) const;
         void find_in_cell(int cell);
+        std::vector<std::string>* string_column(const std::string& (Layout::*find_thing_in_cell)(int));
         std::string layout_file_;
         std::string data_file_;
         int magic_number_;
