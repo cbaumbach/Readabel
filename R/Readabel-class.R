@@ -94,19 +94,27 @@ setGeneric("[[")
 #' @param i Column name or column index
 #' @export
 setMethod("[[", "Readabel", function(x, i) {
-    if (is.numeric(i))
-        i <- names(x)[[i]]
-    if (! i %in% names(x))
-        stop("invalid column: ", i)
-    if (is_in_cache(x, i))
-        return(find_in_cache(x, i))
-    column <- switch(i,
+    column_name <- find_column_name(x, i)
+    if (is_in_cache(x, column_name))
+        return(find_in_cache(x, column_name))
+    column <- switch(column_name,
         trait = .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel"),
         snp = .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel"),
-        .Call("rcpp_get_numeric_column", x@pointer, i, vector("double", nrow(x)), PACKAGE = "Readabel"))
-    add_to_cache(x, i, column)
+        .Call("rcpp_get_numeric_column", x@pointer, column_name, vector("double", nrow(x)), PACKAGE = "Readabel"))
+    add_to_cache(x, column_name, column)
     column
 })
+
+find_column_name <- function(x, i) {
+    if (is.character(i)) {
+        if (! i %in% names(x))
+            stop("invalid column: ", i)
+        return(i)
+    }
+    if (i < 1L || i > ncol(x))
+        stop("invalid column: ", i)
+    return(names(x)[i])
+}
 
 setGeneric("$")
 
