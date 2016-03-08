@@ -1,5 +1,7 @@
 source("setup.R")
 
+context("miscellaneous")
+
 test_that("names", {
     expect_equal(names(x), c("trait", "snp", beta_labels, se_labels, cov_labels))
 })
