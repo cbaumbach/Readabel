@@ -58,12 +58,18 @@ RcppExport SEXP rcpp_traitNames(SEXP xp)
     return trait_labels;
 }
 
-RcppExport SEXP rcpp_get_numeric_column(SEXP xp, SEXP name, SEXP column)
+RcppExport SEXP rcpp_get_numeric_column(SEXP xp, SEXP column_index, SEXP column)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
+    // Adjust column index from R to C++: The leading snp and trait
+    // columns are virtual; they exist only in the R world.  In the
+    // data file, there are only numeric columns.  So we subtract 2.
+    // In addition, columns in R are 1-based while in C++ they are
+    // 0-based.  Thus we subtract one more, for a total of 3.
+    int column_index_ = Rcpp::as<int>(column_index) - 3;
     Rcpp::NumericVector column_(column);
 
-    ptr->column(Rcpp::as<std::string>(name), &column_[0]);
+    ptr->column(column_index_, &column_[0]);
 
     return column_;
 }

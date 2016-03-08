@@ -1,7 +1,6 @@
 #include "Readabel/layout.h"
 #include <stdio.h>
 #include <stddef.h>
-#include <algorithm>
 
 using namespace Readabel;
 
@@ -161,18 +160,17 @@ int Layout::number_of_cells(int tile) const
     return number_of_cells_[tile];;
 }
 
-void Layout::column(const std::string& name, double *column) const
+void Layout::column(int column_index, double *column) const
 {
     FILE *fp;
     if ((fp = fopen(data_file_.c_str(), "rb")) == NULL)
         return;
-    int column_offset = std::find(column_labels_.begin(), column_labels_.end(), name) - column_labels_.begin();
-    int column_index = 0;
+    int row_index = 0;
     for (int tile = 0; tile < number_of_tiles_; tile++) {
         int number_of_bytes = number_of_cells(tile) * number_of_doubles_per_cell_ * sizeof(double);
         fread((void *) cell_buffer_, number_of_bytes, 1, fp);
         for (int cell = 0; cell < number_of_cells(tile); cell++)
-            column[column_index++] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_offset];
+            column[row_index++] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_index];
     }
     fclose(fp);
 }
