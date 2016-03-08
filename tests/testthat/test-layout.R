@@ -62,3 +62,7 @@ test_that("row.names", {
 test_that("dimnames", {
     expect_equal(list(rownames(x), colnames(x)), dimnames(x))
 })
+
+test_that("as.data.frame", {
+    expect_equal(d, as.data.frame(x))
+})

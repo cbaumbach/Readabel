@@ -229,3 +229,13 @@ setGeneric("show")
 setMethod("show", "Readabel", function(x) {
     print(x)
 })
+
+setGeneric("as.data.frame")
+
+#' Coerce a Readabel object into a data.frame
+#'
+#' @param x An object of class Readabel
+#' @export
+setMethod("as.data.frame", "Readabel", function(x) {
+    x[]
+})
