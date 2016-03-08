@@ -2,7 +2,9 @@
 #'
 #' @slot pointer External pointer to a C++ object.
 setClass("Readabel",
-    slots = list(pointer = "externalptr"))
+    slots = list(
+        pointer = "externalptr",
+        cache = "environment"))
 
 setGeneric("names")
 
@@ -21,6 +23,7 @@ setMethod("names", "Readabel", function(x) {
 #' @param data_file Path to data file
 setMethod("initialize", "Readabel", function(.Object, layout_file, data_file) {
     .Object@pointer <- .Call("rcpp_new", layout_file, data_file, PACKAGE = "Readabel")
+    .Object@cache <- new.env(parent = emptyenv())
     .Object
 })
 
@@ -95,14 +98,18 @@ setMethod("[[", "Readabel", function(x, i) {
         i <- names(x)[[i]]
     if (! i %in% names(x))
         stop("invalid column: ", i)
+    if (is_in_cache(x, i))
+        return(find_in_cache(x, i))
     if (i == "trait")
-        .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel")
+        column <- .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel")
     else if (i == "snp")
-        .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel")
+        column <- .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel")
     else {
         column <- vector(mode = "numeric", length = nrow(x))
         .Call("rcpp_get_numeric_column", x@pointer, i, column, PACKAGE = "Readabel")
     }
+    add_to_cache(x, i, column)
+    column
 })
 
 setGeneric("$")
@@ -249,5 +256,36 @@ setGeneric("is_in_cache", function(x, name) stop("not implemented"))
 #' @param x An object of class Readabel
 #' @param name A column name
 setMethod("is_in_cache", "Readabel", function(x, name) {
-    FALSE
+    exists(name, envir = x@cache, inherits = FALSE)
+})
+
+setGeneric("add_to_cache", function(x, name, object) stop("not implemented"))
+
+#' Add object to cache of x under name
+#'
+#' @param x An object of class Readabel
+#' @param name A column name
+#' @param object A column vector of x
+setMethod("add_to_cache", "Readabel", function(x, name, object) {
+    assign(name, object, envir = x@cache)
+})
+
+setGeneric("find_in_cache", function(x, name) stop("not implemented"))
+
+#' Find name in cache of x
+#'
+#' @param x An object of class Readabel
+#' @param name A column name
+setMethod("find_in_cache", "Readabel", function(x, name) {
+    get(name, envir = x@cache, inherits = FALSE)
+})
+
+setGeneric("clear_cache", function(x) stop("not implemented"))
+
+#' Clear cache of x
+#'
+#' @param x An object of class Readabel
+setMethod("clear_cache", "Readabel", function(x) {
+    cached_objects <- ls(envir = x@cache)
+    remove(list = cached_objects, envir = x@cache)
 })
