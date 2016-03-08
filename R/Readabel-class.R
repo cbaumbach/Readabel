@@ -116,6 +116,23 @@ find_column_name <- function(x, i) {
     return(names(x)[i])
 }
 
+is_in_cache <- function(x, name) {
+    exists(name, envir = x@cache, inherits = FALSE)
+}
+
+find_in_cache <- function(x, name) {
+    get(name, envir = x@cache, inherits = FALSE)
+}
+
+add_to_cache <- function(x, name, object) {
+    assign(name, object, envir = x@cache)
+}
+
+clear_cache <- function(x) {
+    cached_objects <- ls(envir = x@cache)
+    remove(list = cached_objects, envir = x@cache)
+}
+
 setGeneric("$")
 
 #' Return a given column
@@ -251,45 +268,4 @@ setGeneric("as.data.frame")
 #' @export
 setMethod("as.data.frame", "Readabel", function(x) {
     x[]
-})
-
-setGeneric("is_in_cache", function(x, name) stop("not implemented"))
-
-#' Is a given column in the cache of x?
-#'
-#' @param x An object of class Readabel
-#' @param name A column name
-setMethod("is_in_cache", "Readabel", function(x, name) {
-    exists(name, envir = x@cache, inherits = FALSE)
-})
-
-setGeneric("add_to_cache", function(x, name, object) stop("not implemented"))
-
-#' Add object to cache of x under name
-#'
-#' @param x An object of class Readabel
-#' @param name A column name
-#' @param object A column vector of x
-setMethod("add_to_cache", "Readabel", function(x, name, object) {
-    assign(name, object, envir = x@cache)
-})
-
-setGeneric("find_in_cache", function(x, name) stop("not implemented"))
-
-#' Find name in cache of x
-#'
-#' @param x An object of class Readabel
-#' @param name A column name
-setMethod("find_in_cache", "Readabel", function(x, name) {
-    get(name, envir = x@cache, inherits = FALSE)
-})
-
-setGeneric("clear_cache", function(x) stop("not implemented"))
-
-#' Clear cache of x
-#'
-#' @param x An object of class Readabel
-setMethod("clear_cache", "Readabel", function(x) {
-    cached_objects <- ls(envir = x@cache)
-    remove(list = cached_objects, envir = x@cache)
 })
