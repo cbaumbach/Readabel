@@ -241,3 +241,13 @@ setGeneric("as.data.frame")
 setMethod("as.data.frame", "Readabel", function(x) {
     x[]
 })
+
+setGeneric("is_in_cache", function(x, name) stop("not implemented"))
+
+#' Is a given column in the cache of x?
+#'
+#' @param x An object of class Readabel
+#' @param name A column name
+setMethod("is_in_cache", "Readabel", function(x, name) {
+    FALSE
+})
