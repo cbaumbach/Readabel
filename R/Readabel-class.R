@@ -226,10 +226,10 @@ setGeneric("show")
 
 #' Print representation of a Readabel object
 #'
-#' @param x An object of class Readabel
+#' @param object An object of class Readabel
 #' @export
-setMethod("show", "Readabel", function(x) {
-    print(x)
+setMethod("show", "Readabel", function(object) {
+    print(object)
 })
 
 setGeneric("as.data.frame")

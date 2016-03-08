@@ -8,7 +8,7 @@
 \S4method{show}{Readabel}(object)
 }
 \arguments{
-\item{x}{An object of class Readabel}
+\item{object}{An object of class Readabel}
 }
 \description{
 Print representation of a Readabel object
