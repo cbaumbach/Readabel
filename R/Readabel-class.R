@@ -100,14 +100,10 @@ setMethod("[[", "Readabel", function(x, i) {
         stop("invalid column: ", i)
     if (is_in_cache(x, i))
         return(find_in_cache(x, i))
-    if (i == "trait")
-        column <- .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel")
-    else if (i == "snp")
-        column <- .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel")
-    else {
-        column <- vector(mode = "numeric", length = nrow(x))
-        .Call("rcpp_get_numeric_column", x@pointer, i, column, PACKAGE = "Readabel")
-    }
+    column <- switch(i,
+        trait = .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel"),
+        snp = .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel"),
+        .Call("rcpp_get_numeric_column", x@pointer, i, vector("double", nrow(x)), PACKAGE = "Readabel"))
     add_to_cache(x, i, column)
     column
 })
