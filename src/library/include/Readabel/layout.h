@@ -24,7 +24,7 @@ namespace Readabel {
         const std::vector<std::string>& trait_labels() const;
         int number_of_tiles() const;
         int number_of_cells(int tile) const;
-        std::vector<double>* column(const std::string& name) const;
+        void column(const std::string& name, double *) const;
         const std::string& find_snp_in_cell(int cell);
         const std::string& find_trait_in_cell(int cell);
         std::vector<std::string>* snp_column();

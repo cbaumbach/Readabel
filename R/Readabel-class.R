@@ -99,8 +99,10 @@ setMethod("[[", "Readabel", function(x, i) {
         .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel")
     else if (i == "snp")
         .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel")
-    else
-        .Call("rcpp_get_numeric_column", x@pointer, i, PACKAGE = "Readabel")
+    else {
+        column <- vector(mode = "numeric", length = nrow(x))
+        .Call("rcpp_get_numeric_column", x@pointer, i, column, PACKAGE = "Readabel")
+    }
 })
 
 setGeneric("$")

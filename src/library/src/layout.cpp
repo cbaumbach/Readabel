@@ -161,22 +161,20 @@ int Layout::number_of_cells(int tile) const
     return number_of_cells_[tile];;
 }
 
-std::vector<double>* Layout::column(const std::string& name) const
+void Layout::column(const std::string& name, double *column) const
 {
     FILE *fp;
     if ((fp = fopen(data_file_.c_str(), "rb")) == NULL)
-        return NULL;
-    std::vector<double>* column = new std::vector<double>;
+        return;
     int column_offset = std::find(column_labels_.begin(), column_labels_.end(), name) - column_labels_.begin();
+    int column_index = 0;
     for (int tile = 0; tile < number_of_tiles_; tile++) {
         int number_of_bytes = number_of_cells(tile) * number_of_doubles_per_cell_ * sizeof(double);
         fread((void *) cell_buffer_, number_of_bytes, 1, fp);
         for (int cell = 0; cell < number_of_cells(tile); cell++)
-            column->push_back(cell_buffer_[cell * number_of_doubles_per_cell_ + column_offset]);
+            column[column_index++] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_offset];
     }
     fclose(fp);
-
-    return column;
 }
 
 std::vector<std::string>* Layout::snp_column()
