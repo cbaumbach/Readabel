@@ -94,8 +94,8 @@ setGeneric("[[")
 #' @param i Column name or column index
 #' @export
 setMethod("[[", "Readabel", function(x, i) {
-    column_name <- find_column_name(x, i)
-    column_index <- find_column_index(x, i)
+    column_name <- find_column_names(x, i)
+    column_index <- find_column_indices(x, i)
     if (is_in_cache(x, column_name))
         return(find_in_cache(x, column_name))
     column <- switch(column_name,
@@ -106,25 +106,29 @@ setMethod("[[", "Readabel", function(x, i) {
     column
 })
 
-find_column_name <- function(x, i) {
+find_column_names <- function(x, i) {
     if (is.character(i)) {
-        if (! i %in% names(x))
-            stop("invalid column: ", i)
+        if (any(invalid_columns <- ! i %in% names(x)))
+            stop("invalid columns: ", paste(i[invalid_columns], collapse = ", "))
         return(i)
     }
-    if (i < 1L || i > ncol(x))
-        stop("invalid column: ", i)
+    if (is.logical(i))
+        return(names(x)[i])
+    if (any(invalid_columns <- i < 1L | i > ncol(x)))
+        stop("invalid columns: ", paste(i[invalid_columns], collapse = ", "))
     return(names(x)[i])
 }
 
-find_column_index <- function(x, i) {
+find_column_indices <- function(x, i) {
     if (is.numeric(i)) {
-        if (i < 1L || i > ncol(x))
-            stop("invalid column: ", i)
+        if (any(invalid_columns <- i < 1L | i > ncol(x)))
+            stop("invalid columns: ", paste(i[invalid_columns], collapse = ", "))
         return(i)
     }
-    if (! i %in% names(x))
-        stop("invalid column: ", i)
+    if (is.logical(i))
+        return(which(rep_len(i, length(names(x)))))
+    if (any(invalid_columns <- ! i %in% names(x)))
+        stop("invalid columns: ", paste(i[invalid_columns], collapse = ", "))
     return(match(i, names(x)))
 }
 
