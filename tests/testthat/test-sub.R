@@ -55,3 +55,8 @@ test_that("x[, character()]", {
 test_that("x[integer(), ]", {
     expect_equal(d[integer(), ], x[integer(), ])
 })
+
+test_that("x[, c('beta_intercept', 'trait')]", {
+    cols <- c("beta_intercept", "trait")
+    expect_equal(d[, cols], x[, cols])
+})
