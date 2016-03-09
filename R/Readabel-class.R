@@ -181,9 +181,9 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     }
     if (missing(i) && missing(j)) {
         numeric_columns <- .Call("rcpp_get_numeric_columns", x@pointer, seq(3L, length(names(x))), PACKAGE = "Readabel")
-        d <- c(list(x$trait, x$snp), numeric_columns)
+        string_columns <- list(x$trait, x$snp)
+        d <- c(string_columns, numeric_columns)
         names(d) <- names(x)
-        attr(d, "row.names") <- seq_len(length(d$trait))
         class(d) <- "data.frame"
         return(d)
     }
