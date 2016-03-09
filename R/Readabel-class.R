@@ -184,11 +184,23 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
         string_columns <- list(x$trait, x$snp)
         d <- c(string_columns, numeric_columns)
         names(d) <- names(x)
+        attr(d, "row.names") <- seq_len(length(d[[1L]]))
         class(d) <- "data.frame"
         return(d)
     }
-    if (missing(i) && !missing(j))
-        return(make_data_frame_from_columns(j))
+    if (missing(i) && !missing(j)) {
+        if (length(j) == 1L && drop)
+            return(x[[j]])
+        column_indices <- find_column_indices(x, j)
+        column_names <- find_column_names(x, j)
+        numeric_columns <- .Call("rcpp_get_numeric_columns", x@pointer, column_indices[column_indices >= 3L], PACKAGE = "Readabel")
+        string_columns <- lapply(column_indices[column_indices <= 2L], function(col) x[[col]])
+        d <- c(string_columns, numeric_columns)
+        names(d) <- column_names
+        attr(d, "row.names") <- seq_len(length(d[[1L]]))
+        class(d) <- "data.frame"
+        return(d)
+    }
     if (!missing(i) && missing(j))
         return(x[][i, ])
     return(x[, j][i, ])
