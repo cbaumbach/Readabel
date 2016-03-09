@@ -70,13 +70,16 @@ RcppExport SEXP rcpp_get_numeric_columns(SEXP xp, SEXP column_indices)
     // 0-based.  Thus we subtract one more, for a total of 3.
     for (int i = 0; i < (int) column_indices_.size(); i++)
         column_indices_[i] -= 3;
-    Rcpp::NumericVector column_(number_of_rows);
     std::vector<double*> columns(column_indices_.size());
-    columns[0] = &column_[0];
-
+    Rcpp::List list_of_columns(column_indices_.size());
+    for (int i = 0; i < (int) list_of_columns.size(); i++) {
+        Rcpp::NumericVector column(number_of_rows);
+        list_of_columns[i] = column;
+        columns[i] = &column[0];
+    }
     ptr->columns(column_indices_, columns);
 
-    return column_;
+    return list_of_columns;
 }
 
 RcppExport SEXP rcpp_get_snp_column(SEXP xp)
