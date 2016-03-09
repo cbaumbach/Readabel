@@ -101,7 +101,7 @@ setMethod("[[", "Readabel", function(x, i) {
     column <- switch(column_name,
         trait = .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel"),
         snp = .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel"),
-        .Call("rcpp_get_numeric_column", x@pointer, column_index, PACKAGE = "Readabel"))
+        .Call("rcpp_get_numeric_columns", x@pointer, column_index, PACKAGE = "Readabel"))
     add_to_cache(x, column_name, column)
     column
 })
