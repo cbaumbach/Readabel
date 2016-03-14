@@ -24,11 +24,11 @@ namespace Readabel {
         const std::vector<std::string>& trait_labels() const;
         int number_of_tiles() const;
         int number_of_cells(int tile) const;
-        void columns(const std::vector<int>& column_indices, std::vector<double*>& columns) const;
+        void columns(const std::vector<int>& column_indices, std::vector<double*>& columns, const std::vector<int>& row_indices) const;
         const std::string& find_snp_in_cell(int cell);
         const std::string& find_trait_in_cell(int cell);
-        std::vector<std::string>* snp_column();
-        std::vector<std::string>* trait_column();
+        std::vector<std::string>* snp_column(const std::vector<int>& row_indices);
+        std::vector<std::string>* trait_column(const std::vector<int>& row_indices);
     private:
         bool is_in_last_tile_column(int tile) const;
         bool is_in_last_tile_row(int tile) const;

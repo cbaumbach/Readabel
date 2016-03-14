@@ -160,7 +160,7 @@ int Layout::number_of_cells(int tile) const
     return number_of_cells_[tile];;
 }
 
-void Layout::columns(const std::vector<int>& column_indices, std::vector<double*>& columns) const
+void Layout::columns(const std::vector<int>& column_indices, std::vector<double*>& columns, const std::vector<int>& row_indices) const
 {
     FILE *fp;
     if ((fp = fopen(data_file_.c_str(), "rb")) == NULL)
@@ -180,12 +180,12 @@ void Layout::columns(const std::vector<int>& column_indices, std::vector<double*
     fclose(fp);
 }
 
-std::vector<std::string>* Layout::snp_column()
+std::vector<std::string>* Layout::snp_column(const std::vector<int>& row_indices)
 {
     return string_column(&Layout::find_snp_in_cell);
 }
 
-std::vector<std::string>* Layout::trait_column()
+std::vector<std::string>* Layout::trait_column(const std::vector<int>& row_indices)
 {
     return string_column(&Layout::find_trait_in_cell);
 }
