@@ -186,7 +186,7 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     for (column in column_names[!cached])
         add_to_cache(x, column, d[[column]])
     d[which(cached)] <- find_in_cache(x, column_names[cached])
-    attr(d, "row.names") <- seq_len(nrow(x))
+    attr(d, "row.names") <- if (length(d)) seq_len(length(d[[1L]])) else integer()
     class(d) <- "data.frame"
     if (!missing(i))
         d <- d[i, , drop = FALSE]
