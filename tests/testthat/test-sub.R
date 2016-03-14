@@ -33,6 +33,11 @@ test_that("x[c(2,5), ]", {
     expect_equal(d[rows, ], x[rows, ])
 })
 
+test_that("x[1:2, 1]", {
+    rows <- 1:2
+    expect_equal(d[rows, 1], x[rows, 1])
+})
+
 test_that("x[c(3,6), c(2,7)]", {
     rows <- c(3,6)
     cols <- c(2,7)
