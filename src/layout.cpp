@@ -85,30 +85,22 @@ static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, 
 static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
-    std::vector<int> indices_of_numeric_columns;
-    std::vector<int> numeric_columns;
-    Rcpp::IntegerVector column_indices_(column_indices);
-    for (int i = 0; i < column_indices_.size(); i++) {
-        if (column_indices_[i] >= 3) {
-            indices_of_numeric_columns.push_back(i);
-            // Adjust data column indices from R to C++: The leading
-            // snp and trait columns are virtual; they exist only in
-            // the R world.  In the data file, there are only numeric
-            // columns.  So we subtract 2.  In addition, columns in R
-            // are 1-based while in C++ they are 0-based.  Thus we
-            // subtract one more, for a total of 3.
-            numeric_columns.push_back(column_indices_[i] - 3);
-        }
-    }
     Rcpp::List list_of_columns_(list_of_columns);
+    Rcpp::IntegerVector column_indices_(column_indices);
     std::vector<int> row_indices_ = Rcpp::as<std::vector<int> >(row_indices);
     int number_of_rows = ptr->number_of_snps() * ptr->number_of_traits();
-    std::vector<double*> columns(numeric_columns.size());
-    for (int i = 0; i < indices_of_numeric_columns.size(); i++) {
-        int idx = indices_of_numeric_columns[i];
-        Rcpp::NumericVector column(number_of_rows);
-        list_of_columns_[idx] = column;
-        columns[i] = &column[0];
+    std::vector<double*> columns;
+    std::vector<int> numeric_columns;
+    for (int i = 0; i < list_of_columns_.size(); i++) {
+        // Subtract 2 leading non-numeric columns and convert 1-based
+        // R indices to 0-based C++ indices: - 2 - 1 = - 3.
+        int column_index = column_indices_[i] - 3;
+        if (column_index >= 0) {
+            numeric_columns.push_back(column_index);
+            Rcpp::NumericVector column(number_of_rows);
+            list_of_columns_[i] = column;
+            columns.push_back(&column[0]);
+        }
     }
     ptr->columns(numeric_columns, columns, row_indices_);
 }
