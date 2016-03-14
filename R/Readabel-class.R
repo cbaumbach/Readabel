@@ -172,6 +172,12 @@ setGeneric("[")
 #'             be a data frame.
 #' @export
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
+    # Detect calls like x[cols] where i plays the role of j.
+    cll <- sys.call(-1)
+    if (length(cll) == 3L && cll[[3L]] != "") {
+        j <- i
+        i <- seq_len(nrow(x))
+    }
     column_names <- if (missing(j)) names(x) else find_column_names(x, j)
     column_indices <- find_column_indices(x, column_names)
     cached <- is_in_cache(x, column_names)
