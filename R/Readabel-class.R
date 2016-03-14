@@ -189,15 +189,20 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     attr(d, "row.names") <- if (length(d)) seq_len(length(d[[1L]])) else integer()
     class(d) <- "data.frame"
     if (!missing(i))
-        d <- d[i, , drop = FALSE]
+        d <- d[row_indices, , drop = FALSE]
     d
 })
 
 find_row_indices <- function(x, i) {
-    if (is.integer(i)) {
-        return(i)
-    }
-    seq_len(nrow(x))
+    switch(typeof(i),
+    integer = i,
+    double = as.integer(i),
+    logical = {
+        if (length(i) < nrow(x))
+            i <- rep_len(i, nrow(x))
+        which(i)
+    },
+    character = seq_len(nrow(x)))
 }
 
 setGeneric("head")
