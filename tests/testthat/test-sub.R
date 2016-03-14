@@ -24,6 +24,11 @@ test_that("x[]", {
     expect_equal(d[], x[])
 })
 
+test_that("x[1:2]", {
+    cols <- 1:2
+    expect_equal(d[cols], x[cols])
+})
+
 test_that("x[,]", {
     expect_equal(d[, ], x[, ])
 })
