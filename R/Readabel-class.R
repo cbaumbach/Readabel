@@ -173,12 +173,17 @@ setGeneric("[")
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     column_names <- if (missing(j)) names(x) else find_column_names(x, j)
     column_indices <- find_column_indices(x, column_names)
+    cached <- is_in_cache(x, column_names)
+    column_indices[cached] <- 0L
     if (length(column_names) == 1L && drop)
         return(x[[column_names]])
     d <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = length(column_indices)),
         column_indices, PACKAGE = "Readabel")
     names(d) <- column_names
+    for (column in column_names[!cached])
+        add_to_cache(x, column, d[[column]])
+    d[which(cached)] <- find_in_cache(x, column_names[cached])
     attr(d, "row.names") <- seq_len(nrow(x))
     class(d) <- "data.frame"
     if (!missing(i))
