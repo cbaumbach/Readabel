@@ -72,23 +72,14 @@ RcppExport SEXP rcpp_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SE
 static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
-    Rcpp::IntegerVector column_indices_(column_indices);
-    std::vector<int> indices_of_string_columns;
-    for (int i = 0; i < column_indices_.size(); i++)
-        if (column_indices_[i] == 1 || column_indices_[i] == 2)
-            indices_of_string_columns.push_back(i);
     Rcpp::List list_of_columns_(list_of_columns);
+    Rcpp::IntegerVector column_indices_(column_indices);
     std::vector<int> row_indices_ = Rcpp::as<std::vector<int> >(row_indices);
-    for (int i = 0; i < indices_of_string_columns.size(); i++) {
-        int idx = indices_of_string_columns[i];
-        if (column_indices_[idx] == 1) {
-            Rcpp::CharacterVector labels(Rcpp::wrap(*ptr->trait_column(row_indices_)));
-            list_of_columns_[idx] = labels;
-        } else {
-            Rcpp::CharacterVector labels(Rcpp::wrap(*ptr->snp_column(row_indices_)));
-            list_of_columns_[idx] = labels;
-        }
-    }
+    for (int i = 0; i < list_of_columns_.size(); i++)
+        if (column_indices_[i] == 1)
+            list_of_columns_[i] = Rcpp::wrap(*ptr->trait_column(row_indices_));
+        else if (column_indices_[i] == 2)
+            list_of_columns_[i] = Rcpp::wrap(*ptr->snp_column(row_indices_));
 }
 
 static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices)
