@@ -58,19 +58,20 @@ RcppExport SEXP rcpp_traitNames(SEXP xp)
     return trait_labels;
 }
 
-RcppExport SEXP rcpp_columns(SEXP xp, SEXP column_indices)
+RcppExport SEXP rcpp_columns(SEXP xp, SEXP list_of_columns, SEXP column_indices)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     int number_of_rows = ptr->number_of_snps() * ptr->number_of_traits();
-    std::vector<int> column_indices_ = Rcpp::as<std::vector<int> >(column_indices);
     // Find string and numeric columns.
     std::vector<int> indices_of_string_columns;
     std::vector<int> indices_of_numeric_columns;
     std::vector<int> numeric_columns;
+    Rcpp::List list_of_columns_(list_of_columns);
+    Rcpp::IntegerVector column_indices_(column_indices);
     for (int i = 0; i < column_indices_.size(); i++) {
-        if (column_indices_[i] == 1 || column_indices_[i] == 2)
+        if (column_indices_[i] == 1 || column_indices_[i] == 2) {
             indices_of_string_columns.push_back(i);
-        else {
+        } else if (column_indices_[i]) {
             indices_of_numeric_columns.push_back(i);
             // Adjust column indices from R to C++: The leading snp
             // and trait columns are virtual; they exist only in the R
@@ -82,15 +83,14 @@ RcppExport SEXP rcpp_columns(SEXP xp, SEXP column_indices)
         }
     }
     // Collect string columns.
-    Rcpp::List list_of_columns(column_indices_.size());
     for (int i = 0; i < indices_of_string_columns.size(); i++) {
         int idx = indices_of_string_columns[i];
         if (column_indices_[idx] == 1) {
             Rcpp::CharacterVector labels(Rcpp::wrap(*ptr->trait_column()));
-            list_of_columns[idx] = labels;
+            list_of_columns_[idx] = labels;
         } else {
             Rcpp::CharacterVector labels(Rcpp::wrap(*ptr->snp_column()));
-            list_of_columns[idx] = labels;
+            list_of_columns_[idx] = labels;
         }
     }
     // Collect numeric columns.
@@ -98,10 +98,10 @@ RcppExport SEXP rcpp_columns(SEXP xp, SEXP column_indices)
     for (int i = 0; i < indices_of_numeric_columns.size(); i++) {
         int idx = indices_of_numeric_columns[i];
         Rcpp::NumericVector column(number_of_rows);
-        list_of_columns[idx] = column;
+        list_of_columns_[idx] = column;
         columns[i] = &column[0];
     }
     ptr->columns(numeric_columns, columns);
 
-    return list_of_columns;
+    return list_of_columns_;
 }

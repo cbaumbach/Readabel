@@ -98,7 +98,9 @@ setMethod("[[", "Readabel", function(x, i) {
     column_index <- find_column_indices(x, i)
     if (is_in_cache(x, column_name))
         return(find_in_cache(x, column_name))
-    column <- .Call("rcpp_columns", x@pointer, column_index, PACKAGE = "Readabel")[[1L]]
+    column <- .Call("rcpp_columns", x@pointer,
+        vector(mode = "list", length = 1L),
+        column_index, PACKAGE = "Readabel")[[1L]]
     add_to_cache(x, column_name, column)
     column
 })
@@ -170,7 +172,9 @@ setGeneric("[")
 #' @export
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     if (missing(i) && missing(j)) {
-        d <- .Call("rcpp_columns", x@pointer, seq_along(names(x)), PACKAGE = "Readabel")
+        d <- .Call("rcpp_columns", x@pointer,
+            vector(mode = "list", length = ncol(x)),
+            seq_along(names(x)), PACKAGE = "Readabel")
         names(d) <- names(x)
         attr(d, "row.names") <- seq_len(length(d[[1L]]))
         class(d) <- "data.frame"
@@ -181,7 +185,9 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
             return(x[[j]])
         column_indices <- find_column_indices(x, j)
         column_names <- find_column_names(x, j)
-        d <- .Call("rcpp_columns", x@pointer, column_indices, PACKAGE = "Readabel")
+        d <- .Call("rcpp_columns", x@pointer,
+            vector(mode = "list", length = length(column_indices)),
+            column_indices, PACKAGE = "Readabel")
         names(d) <- column_names
         attr(d, "row.names") <- seq_len(length(d[[1L]]))
         class(d) <- "data.frame"
