@@ -98,10 +98,7 @@ setMethod("[[", "Readabel", function(x, i) {
     column_index <- find_column_indices(x, i)
     if (is_in_cache(x, column_name))
         return(find_in_cache(x, column_name))
-    column <- switch(column_name,
-        trait = .Call("rcpp_get_trait_column", x@pointer, PACKAGE = "Readabel"),
-        snp = .Call("rcpp_get_snp_column", x@pointer, PACKAGE = "Readabel"),
-        .Call("rcpp_get_numeric_columns", x@pointer, column_index, PACKAGE = "Readabel")[[1L]])
+    column <- .Call("rcpp_columns", x@pointer, column_index, PACKAGE = "Readabel")[[1L]]
     add_to_cache(x, column_name, column)
     column
 })
@@ -172,17 +169,8 @@ setGeneric("[")
 #'             be a data frame.
 #' @export
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
-    make_data_frame_from_columns <- function(columns) {
-        if (is.logical(columns) || is.numeric(columns))
-            columns <- names(x)[columns]
-        d <- data.frame(lapply(columns, function(col) x[[col]]), stringsAsFactors = FALSE)
-        names(d) <- columns
-        d[,, drop]
-    }
     if (missing(i) && missing(j)) {
-        numeric_columns <- .Call("rcpp_get_numeric_columns", x@pointer, seq(3L, length(names(x))), PACKAGE = "Readabel")
-        string_columns <- list(x$trait, x$snp)
-        d <- c(string_columns, numeric_columns)
+        d <- .Call("rcpp_columns", x@pointer, seq_along(names(x)), PACKAGE = "Readabel")
         names(d) <- names(x)
         attr(d, "row.names") <- seq_len(length(d[[1L]]))
         class(d) <- "data.frame"
@@ -193,9 +181,7 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
             return(x[[j]])
         column_indices <- find_column_indices(x, j)
         column_names <- find_column_names(x, j)
-        numeric_columns <- .Call("rcpp_get_numeric_columns", x@pointer, column_indices[column_indices >= 3L], PACKAGE = "Readabel")
-        string_columns <- lapply(column_indices[column_indices <= 2L], function(col) x[[col]])
-        d <- c(string_columns, numeric_columns)
+        d <- .Call("rcpp_columns", x@pointer, column_indices, PACKAGE = "Readabel")
         names(d) <- column_names
         attr(d, "row.names") <- seq_len(length(d[[1L]]))
         class(d) <- "data.frame"
