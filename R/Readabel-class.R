@@ -176,9 +176,9 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     column_indices <- find_column_indices(x, column_names)
     cached <- is_in_cache(x, column_names)
     column_indices[cached] <- 0L
-    row_indices <- seq_len(nrow(x))
+    row_indices <- if (missing(i)) seq_len(nrow(x)) else find_row_indices(x, i)
     if (length(column_names) == 1L && drop)
-        return(x[[column_names]])
+        return(x[[column_names]][row_indices])
     d <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = length(column_indices)),
         row_indices, column_indices, PACKAGE = "Readabel")
@@ -192,6 +192,13 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
         d <- d[i, , drop = FALSE]
     d
 })
+
+find_row_indices <- function(x, i) {
+    if (is.integer(i)) {
+        return(i)
+    }
+    seq_len(nrow(x))
+}
 
 setGeneric("head")
 
