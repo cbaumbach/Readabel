@@ -170,7 +170,7 @@ void Layout::columns(const std::vector<int>& column_indices, std::vector<double*
         int number_of_bytes = number_of_cells(tile) * number_of_doubles_per_cell_ * sizeof(double);
         fread((void *) cell_buffer_, number_of_bytes, 1, fp);
         for (int cell = 0; cell < number_of_cells(tile); cell++) {
-            for (int i = 0; i < column_indices.size(); i++) {
+            for (int i = 0; i < (int) column_indices.size(); i++) {
                 int column_index = column_indices[i];
                 columns[i][row_index] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_index];
             }
