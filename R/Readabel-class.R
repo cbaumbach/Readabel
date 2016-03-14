@@ -171,31 +171,19 @@ setGeneric("[")
 #'             be a data frame.
 #' @export
 setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
-    if (missing(i) && missing(j)) {
-        d <- .Call("rcpp_columns", x@pointer,
-            vector(mode = "list", length = ncol(x)),
-            seq_along(names(x)), PACKAGE = "Readabel")
-        names(d) <- names(x)
-        attr(d, "row.names") <- seq_len(length(d[[1L]]))
-        class(d) <- "data.frame"
-        return(d)
-    }
-    if (missing(i) && !missing(j)) {
-        if (length(j) == 1L && drop)
-            return(x[[j]])
-        column_indices <- find_column_indices(x, j)
-        column_names <- find_column_names(x, j)
-        d <- .Call("rcpp_columns", x@pointer,
-            vector(mode = "list", length = length(column_indices)),
-            column_indices, PACKAGE = "Readabel")
-        names(d) <- column_names
-        attr(d, "row.names") <- seq_len(length(d[[1L]]))
-        class(d) <- "data.frame"
-        return(d)
-    }
-    if (!missing(i) && missing(j))
-        return(x[][i, ])
-    return(x[, j][i, ])
+    column_names <- if (missing(j)) names(x) else find_column_names(x, j)
+    column_indices <- find_column_indices(x, column_names)
+    if (length(column_names) == 1L && drop)
+        return(x[[column_names]])
+    d <- .Call("rcpp_columns", x@pointer,
+        vector(mode = "list", length = length(column_indices)),
+        column_indices, PACKAGE = "Readabel")
+    names(d) <- column_names
+    attr(d, "row.names") <- seq_len(nrow(x))
+    class(d) <- "data.frame"
+    if (!missing(i))
+        d <- d[i, , drop = FALSE]
+    d
 })
 
 setGeneric("head")
