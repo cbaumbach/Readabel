@@ -97,7 +97,7 @@ setMethod("[[", "Readabel", function(x, i) {
     column_name <- find_column_names(x, i)
     column_index <- find_column_indices(x, i)
     if (is_in_cache(x, column_name))
-        return(find_in_cache(x, column_name))
+        return(find_in_cache(x, column_name)[[1L]])
     column <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = 1L),
         column_index, PACKAGE = "Readabel")[[1L]]
@@ -131,12 +131,12 @@ find_column_indices <- function(x, i) {
     return(match(i, names(x)))
 }
 
-is_in_cache <- function(x, name) {
-    exists(name, envir = x@cache, inherits = FALSE)
+is_in_cache <- function(x, names) {
+    vapply(names, exists, logical(1L), envir = x@cache, inherits = FALSE)
 }
 
-find_in_cache <- function(x, name) {
-    get(name, envir = x@cache, inherits = FALSE)
+find_in_cache <- function(x, names) {
+    lapply(names, get, envir = x@cache, inherits = FALSE)
 }
 
 add_to_cache <- function(x, name, object) {
