@@ -165,20 +165,23 @@ void Layout::columns(const std::vector<int>& column_indices, std::vector<double*
     FILE *fp;
     if ((fp = fopen(data_file_.c_str(), "rb")) == NULL)
         return;
-    int row_index = 0;
+    int row = 0;
     int file_index = 0;
     for (int tile = 0; tile < number_of_tiles_; tile++) {
         int number_of_bytes = number_of_cells(tile) * number_of_doubles_per_cell_ * sizeof(double);
         fread((void *) cell_buffer_, number_of_bytes, 1, fp);
         for (int cell = 0; cell < number_of_cells(tile); cell++) {
-            if (row_index < (int) row_indices.size() && file_index == row_indices[row_index]) {
+            if (row == (int) row_indices.size())
+                goto DONE;
+            if (file_index == row_indices[row]) {
                 for (int i = 0; i < (int) column_indices.size(); i++)
-                    columns[i][row_index] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
-                ++row_index;
+                    columns[i][row] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
+                ++row;
             }
             ++file_index;
         }
     }
+DONE:
     fclose(fp);
 }
 
