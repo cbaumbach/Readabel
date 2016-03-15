@@ -102,3 +102,9 @@ test_that("x[c(1,1), ]", {
     rows <- c(1, 1)
     expect_equal(d[rows, ], x[rows, ])
 })
+
+test_that("x[c(1,1)]", {
+    clear_cache(x)
+    cols <- c(1, 1)
+    expect_equal(d[cols], x[cols])
+})
