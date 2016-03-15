@@ -27,21 +27,31 @@ test_that("traitNames", {
 })
 
 test_that("$", {
+    clear_cache(x)
     expect_equal(nrow(x), length(x$beta_snp))
+    clear_cache(x)
     expect_true(all(x$beta_snp %in% 1:nrow(x)))
+    clear_cache(x)
     expect_equal(x$beta_snp, x$beta_sex)
+    clear_cache(x)
     expect_equal(snp_column, x$snp)
+    clear_cache(x)
     expect_equal(trait_column, x$trait)
+    clear_cache(x)
     expect_error(x$foobar)
 })
 
 test_that("head", {
+    clear_cache(x)
     expect_equal(head(d), head(x))
+    clear_cache(x)
     expect_equal(head(d, 2), head(x, 2))
 })
 
 test_that("tail", {
+    clear_cache(x)
     expect_equal(tail(d), tail(x))
+    clear_cache(x)
     expect_equal(tail(d, 2), tail(x, 2))
 })
 
@@ -66,5 +76,6 @@ test_that("dimnames", {
 })
 
 test_that("as.data.frame", {
+    clear_cache(x)
     expect_equal(d, as.data.frame(x))
 })

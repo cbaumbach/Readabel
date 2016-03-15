@@ -26,6 +26,7 @@ x <- read_omicabel(fake_layout_file, fake_data_file)
 d <- data.frame(lapply(names(x), function(name) x[[name]]), stringsAsFactors = FALSE)
 names(d) <- names(x)
 numeric_columns <- setdiff(names(x), c("trait", "snp"))
+clear_cache(x)
 
 snp_labels <- paste0("snp", 1:9)
 trait_labels <- paste0("trait", 1:7)
