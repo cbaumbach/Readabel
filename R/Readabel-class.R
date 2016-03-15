@@ -192,13 +192,13 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     d <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = length(column_indices)),
         sort(row_indices), row_order, column_indices, PACKAGE = "Readabel")
-    names(d) <- column_names
+    names(d) <- uniqify(column_names)
     if (any(!cached) && identical(row_indices, seq_len(nrow(x)))) {
         for (column in column_names[!cached])
             add_to_cache(x, column, d[[column]])
     }
     d[which(cached)] <- lapply(find_in_cache(x, column_names[cached]), `[`, row_indices)
-    attr(d, "row.names") <- uniqify_row_names(row_names)
+    attr(d, "row.names") <- uniqify(row_names)
     class(d) <- "data.frame"
     d
 })
@@ -221,7 +221,7 @@ find_row_indices <- function(x, i) {
         character = seq_len(nrow(x)))
 }
 
-uniqify_row_names <- function(x) {
+uniqify <- function(x) {
     if (!anyDuplicated(x))
         return(x)
     x <- as.character(x)
