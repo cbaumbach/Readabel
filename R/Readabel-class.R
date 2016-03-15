@@ -97,11 +97,13 @@ setMethod("[[", "Readabel", function(x, i) {
     column_name <- find_column_names(x, i)
     column_index <- find_column_indices(x, i)
     row_indices <- seq_len(nrow(x))
+    row_order <- row_indices
     if (is_in_cache(x, column_name))
         return(find_in_cache(x, column_name)[[1L]])
     column <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = 1L),
-        row_indices, column_index, PACKAGE = "Readabel")[[1L]]
+        row_indices, row_order, column_index,
+        PACKAGE = "Readabel")[[1L]]
     add_to_cache(x, column_name, column)
     column
 })
@@ -182,13 +184,14 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     column_indices <- find_column_indices(x, column_names)
     row_names <- if (missing(i)) seq_len(nrow(x)) else find_row_indices(x, i)
     row_indices <- find_row_indices(x, row_names)
+    row_order <- order(row_indices)
     cached <- is_in_cache(x, column_names)
     column_indices[cached] <- 0L
     if (length(column_names) == 1L && drop)
         return(x[[column_names]][row_indices])
     d <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = length(column_indices)),
-        row_indices, column_indices, PACKAGE = "Readabel")
+        sort(row_indices), row_order, column_indices, PACKAGE = "Readabel")
     names(d) <- column_names
     if (any(!cached) && identical(row_indices, seq_len(nrow(x)))) {
         for (column in column_names[!cached])

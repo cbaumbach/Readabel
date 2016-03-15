@@ -3,8 +3,8 @@
 #include <string>
 #include "Readabel/layout.h"
 
-static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices);
-static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices);
+static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP row_order, SEXP column_indices);
+static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP row_order, SEXP column_indices);
 
 RcppExport SEXP rcpp_new(SEXP layout_file, SEXP data_file)
 {
@@ -61,39 +61,45 @@ RcppExport SEXP rcpp_traitNames(SEXP xp)
     return trait_labels;
 }
 
-RcppExport SEXP rcpp_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices)
+RcppExport SEXP rcpp_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP row_order, SEXP column_indices)
 {
-    add_string_columns(xp, list_of_columns, row_indices, column_indices);
-    add_numeric_columns(xp, list_of_columns, row_indices, column_indices);
+    add_string_columns(xp, list_of_columns, row_indices, row_order, column_indices);
+    add_numeric_columns(xp, list_of_columns, row_indices, row_order, column_indices);
 
     return list_of_columns;
 }
 
-static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices)
+static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP row_order, SEXP column_indices)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     Rcpp::List list_of_columns_(list_of_columns);
     Rcpp::IntegerVector column_indices_(column_indices);
     std::vector<int> row_indices_ = Rcpp::as<std::vector<int> >(row_indices);
+    std::vector<int> row_order_ = Rcpp::as<std::vector<int> >(row_order);
     // Convert to 0-based indices.
-    for (int i = 0; i < row_indices_.size(); i++)
+    for (int i = 0; i < row_indices_.size(); i++) {
         row_indices_[i] -= 1;
+        row_order_[i] -= 1;
+    }
     for (int i = 0; i < list_of_columns_.size(); i++)
         if (column_indices_[i] == 1)
-            list_of_columns_[i] = Rcpp::wrap(*ptr->trait_column(row_indices_));
+            list_of_columns_[i] = Rcpp::wrap(*ptr->trait_column(row_indices_, row_order_));
         else if (column_indices_[i] == 2)
-            list_of_columns_[i] = Rcpp::wrap(*ptr->snp_column(row_indices_));
+            list_of_columns_[i] = Rcpp::wrap(*ptr->snp_column(row_indices_, row_order_));
 }
 
-static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP column_indices)
+static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, SEXP row_order, SEXP column_indices)
 {
     Rcpp::XPtr<Readabel::Layout> ptr(xp);
     Rcpp::List list_of_columns_(list_of_columns);
     Rcpp::IntegerVector column_indices_(column_indices);
     std::vector<int> row_indices_ = Rcpp::as<std::vector<int> >(row_indices);
+    std::vector<int> row_order_ = Rcpp::as<std::vector<int> >(row_order);
     // Convert to 0-based indices.
-    for (int i = 0; i < row_indices_.size(); i++)
+    for (int i = 0; i < row_indices_.size(); i++) {
         row_indices_[i] -= 1;
+        row_order_[i] -= 1;
+    }
     std::vector<double*> columns;
     std::vector<int> numeric_columns;
     for (int i = 0; i < list_of_columns_.size(); i++) {
@@ -107,5 +113,5 @@ static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices,
             columns.push_back(&column[0]);
         }
     }
-    ptr->columns(numeric_columns, columns, row_indices_);
+    ptr->columns(numeric_columns, columns, row_indices_, row_order_);
 }

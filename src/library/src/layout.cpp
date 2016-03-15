@@ -160,7 +160,11 @@ int Layout::number_of_cells(int tile) const
     return number_of_cells_[tile];;
 }
 
-void Layout::columns(const std::vector<int>& column_indices, std::vector<double*>& columns, const std::vector<int>& row_indices) const
+void Layout::columns(
+    const std::vector<int>& column_indices,
+    std::vector<double*>& columns,
+    const std::vector<int>& row_indices,
+    const std::vector<int>& row_order) const
 {
     FILE *fp;
     if ((fp = fopen(data_file_.c_str(), "rb")) == NULL)
@@ -175,7 +179,7 @@ void Layout::columns(const std::vector<int>& column_indices, std::vector<double*
                 goto DONE;
             if (file_index == row_indices[row]) {
                 for (int i = 0; i < (int) column_indices.size(); i++)
-                    columns[i][row] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
+                    columns[i][row_order[row]] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
                 ++row;
             }
             ++file_index;
@@ -185,21 +189,21 @@ DONE:
     fclose(fp);
 }
 
-std::vector<std::string>* Layout::snp_column(const std::vector<int>& row_indices)
+std::vector<std::string>* Layout::snp_column(const std::vector<int>& row_indices, const std::vector<int>& row_order)
 {
-    return string_column(&Layout::find_snp_in_cell, row_indices);
+    return string_column(&Layout::find_snp_in_cell, row_indices, row_order);
 }
 
-std::vector<std::string>* Layout::trait_column(const std::vector<int>& row_indices)
+std::vector<std::string>* Layout::trait_column(const std::vector<int>& row_indices, const std::vector<int>& row_order)
 {
-    return string_column(&Layout::find_trait_in_cell, row_indices);
+    return string_column(&Layout::find_trait_in_cell, row_indices, row_order);
 }
 
-std::vector<std::string>* Layout::string_column(const std::string& (Layout::*find_thing_in_cell)(int), const std::vector<int>& row_indices)
+std::vector<std::string>* Layout::string_column(const std::string& (Layout::*find_thing_in_cell)(int), const std::vector<int>& row_indices, const std::vector<int>& row_order)
 {
-    std::vector<std::string>* column = new std::vector<std::string>;
-    for (std::vector<int>::const_iterator row = row_indices.begin(); row != row_indices.end(); ++row)
-        column->push_back((this->*find_thing_in_cell)(*row));
+    std::vector<std::string>* column = new std::vector<std::string>(row_indices.size());
+    for (int row = 0; row < (int) row_indices.size(); row++)
+        (*column)[row_order[row]] = (this->*find_thing_in_cell)(row_indices[row]);
 
     return column;
 }

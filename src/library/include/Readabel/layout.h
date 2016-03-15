@@ -24,16 +24,16 @@ namespace Readabel {
         const std::vector<std::string>& trait_labels() const;
         int number_of_tiles() const;
         int number_of_cells(int tile) const;
-        void columns(const std::vector<int>& column_indices, std::vector<double*>& columns, const std::vector<int>& row_indices) const;
+        void columns(const std::vector<int>& column_indices, std::vector<double*>& columns, const std::vector<int>& row_indices, const std::vector<int>& row_order) const;
         const std::string& find_snp_in_cell(int cell);
         const std::string& find_trait_in_cell(int cell);
-        std::vector<std::string>* snp_column(const std::vector<int>& row_indices);
-        std::vector<std::string>* trait_column(const std::vector<int>& row_indices);
+        std::vector<std::string>* snp_column(const std::vector<int>& row_indices, const std::vector<int>& row_order);
+        std::vector<std::string>* trait_column(const std::vector<int>& row_indices, const std::vector<int>& row_order);
     private:
         bool is_in_last_tile_column(int tile) const;
         bool is_in_last_tile_row(int tile) const;
         void find_in_cell(int cell);
-        std::vector<std::string>* string_column(const std::string& (Layout::*find_thing_in_cell)(int), const std::vector<int>& row_indices);
+        std::vector<std::string>* string_column(const std::string& (Layout::*find_thing_in_cell)(int), const std::vector<int>& row_indices, const std::vector<int>& row_order);
         std::string layout_file_;
         std::string data_file_;
         int magic_number_;
