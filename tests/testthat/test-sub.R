@@ -90,3 +90,9 @@ test_that("x[, c('beta_intercept', 'trait')]", {
     cols <- c("beta_intercept", "trait")
     expect_equal(d[, cols], x[, cols])
 })
+
+test_that("x[2:1, ]", {
+    clear_cache(x)
+    rows <- 2:1
+    expect_equal(d[rows, ], x[rows, ])
+})
