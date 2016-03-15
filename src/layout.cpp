@@ -75,6 +75,9 @@ static void add_string_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices, 
     Rcpp::List list_of_columns_(list_of_columns);
     Rcpp::IntegerVector column_indices_(column_indices);
     std::vector<int> row_indices_ = Rcpp::as<std::vector<int> >(row_indices);
+    // Convert to 0-based indices.
+    for (int i = 0; i < row_indices_.size(); i++)
+        row_indices_[i] -= 1;
     for (int i = 0; i < list_of_columns_.size(); i++)
         if (column_indices_[i] == 1)
             list_of_columns_[i] = Rcpp::wrap(*ptr->trait_column(row_indices_));
@@ -88,7 +91,9 @@ static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices,
     Rcpp::List list_of_columns_(list_of_columns);
     Rcpp::IntegerVector column_indices_(column_indices);
     std::vector<int> row_indices_ = Rcpp::as<std::vector<int> >(row_indices);
-    int number_of_rows = ptr->number_of_snps() * ptr->number_of_traits();
+    // Convert to 0-based indices.
+    for (int i = 0; i < row_indices_.size(); i++)
+        row_indices_[i] -= 1;
     std::vector<double*> columns;
     std::vector<int> numeric_columns;
     for (int i = 0; i < list_of_columns_.size(); i++) {
@@ -97,7 +102,7 @@ static void add_numeric_columns(SEXP xp, SEXP list_of_columns, SEXP row_indices,
         int column_index = column_indices_[i] - 3;
         if (column_index >= 0) {
             numeric_columns.push_back(column_index);
-            Rcpp::NumericVector column(number_of_rows);
+            Rcpp::NumericVector column(row_indices_.size());
             list_of_columns_[i] = column;
             columns.push_back(&column[0]);
         }

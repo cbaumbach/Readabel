@@ -166,13 +166,17 @@ void Layout::columns(const std::vector<int>& column_indices, std::vector<double*
     if ((fp = fopen(data_file_.c_str(), "rb")) == NULL)
         return;
     int row_index = 0;
+    int file_index = 0;
     for (int tile = 0; tile < number_of_tiles_; tile++) {
         int number_of_bytes = number_of_cells(tile) * number_of_doubles_per_cell_ * sizeof(double);
         fread((void *) cell_buffer_, number_of_bytes, 1, fp);
         for (int cell = 0; cell < number_of_cells(tile); cell++) {
-            for (int i = 0; i < (int) column_indices.size(); i++)
-                columns[i][row_index] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
-            ++row_index;
+            if (row_index < (int) row_indices.size() && file_index == row_indices[row_index]) {
+                for (int i = 0; i < (int) column_indices.size(); i++)
+                    columns[i][row_index] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
+                ++row_index;
+            }
+            ++file_index;
         }
     }
     fclose(fp);
@@ -180,20 +184,19 @@ void Layout::columns(const std::vector<int>& column_indices, std::vector<double*
 
 std::vector<std::string>* Layout::snp_column(const std::vector<int>& row_indices)
 {
-    return string_column(&Layout::find_snp_in_cell);
+    return string_column(&Layout::find_snp_in_cell, row_indices);
 }
 
 std::vector<std::string>* Layout::trait_column(const std::vector<int>& row_indices)
 {
-    return string_column(&Layout::find_trait_in_cell);
+    return string_column(&Layout::find_trait_in_cell, row_indices);
 }
 
-std::vector<std::string>* Layout::string_column(const std::string& (Layout::*find_thing_in_cell)(int))
+std::vector<std::string>* Layout::string_column(const std::string& (Layout::*find_thing_in_cell)(int), const std::vector<int>& row_indices)
 {
     std::vector<std::string>* column = new std::vector<std::string>;
-    int number_of_cells = number_of_snps_ * number_of_traits_;
-    for (int cell = 0; cell < number_of_cells; cell++)
-        column->push_back((this->*find_thing_in_cell)(cell));
+    for (std::vector<int>::const_iterator row = row_indices.begin(); row != row_indices.end(); ++row)
+        column->push_back((this->*find_thing_in_cell)(*row));
 
     return column;
 }

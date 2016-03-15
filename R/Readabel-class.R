@@ -180,22 +180,22 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     }
     column_names <- if (missing(j)) names(x) else find_column_names(x, j)
     column_indices <- find_column_indices(x, column_names)
+    row_indices <- if (missing(i)) seq_len(nrow(x)) else find_row_indices(x, i)
     cached <- is_in_cache(x, column_names)
     column_indices[cached] <- 0L
-    row_indices <- if (missing(i)) seq_len(nrow(x)) else find_row_indices(x, i)
     if (length(column_names) == 1L && drop)
         return(x[[column_names]][row_indices])
     d <- .Call("rcpp_columns", x@pointer,
         vector(mode = "list", length = length(column_indices)),
         row_indices, column_indices, PACKAGE = "Readabel")
     names(d) <- column_names
-    for (column in column_names[!cached])
-        add_to_cache(x, column, d[[column]])
-    d[which(cached)] <- find_in_cache(x, column_names[cached])
-    attr(d, "row.names") <- if (length(d)) seq_len(length(d[[1L]])) else integer()
+    if (length(row_indices) == nrow(x) && all(row_indices == seq_len(nrow(x)))) {
+        for (column in column_names[!cached])
+            add_to_cache(x, column, d[[column]])
+    }
+    d[which(cached)] <- lapply(find_in_cache(x, column_names[cached]), `[`, row_indices)
+    attr(d, "row.names") <- if (all(row_indices < 0L)) seq_len(nrow(x))[row_indices] else row_indices
     class(d) <- "data.frame"
-    if (!missing(i))
-        d <- d[row_indices, , drop = FALSE]
     d
 })
 
