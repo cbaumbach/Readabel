@@ -175,13 +175,13 @@ void Layout::columns(
         int number_of_bytes = number_of_cells(tile) * number_of_doubles_per_cell_ * sizeof(double);
         fread((void *) cell_buffer_, number_of_bytes, 1, fp);
         for (int cell = 0; cell < number_of_cells(tile); cell++) {
-            if (row == (int) row_indices.size())
-                goto DONE;
-            if (file_index == row_indices[row]) {
+            while (row < (int) row_indices.size() && file_index == row_indices[row]) {
                 for (int i = 0; i < (int) column_indices.size(); i++)
                     columns[i][row_order[row]] = cell_buffer_[cell * number_of_doubles_per_cell_ + column_indices[i]];
                 ++row;
             }
+            if (row == (int) row_indices.size())
+                goto DONE;
             ++file_index;
         }
     }

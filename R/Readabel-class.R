@@ -198,7 +198,7 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
             add_to_cache(x, column, d[[column]])
     }
     d[which(cached)] <- lapply(find_in_cache(x, column_names[cached]), `[`, row_indices)
-    attr(d, "row.names") <- row_names
+    attr(d, "row.names") <- uniqify_row_names(row_names)
     class(d) <- "data.frame"
     d
 })
@@ -219,6 +219,18 @@ find_row_indices <- function(x, i) {
             which(i)
         },
         character = seq_len(nrow(x)))
+}
+
+uniqify_row_names <- function(x) {
+    if (!anyDuplicated(x))
+        return(x)
+    x <- as.character(x)
+    duplicates <- duplicated(x)
+    x[duplicates] <- ave(x[duplicates], x[duplicates],
+        FUN = function(x) {
+            paste0(x, ".", seq_along(x))
+        })
+    x
 }
 
 setGeneric("head")
