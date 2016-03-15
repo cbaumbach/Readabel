@@ -180,7 +180,8 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
     }
     column_names <- if (missing(j)) names(x) else find_column_names(x, j)
     column_indices <- find_column_indices(x, column_names)
-    row_indices <- if (missing(i)) seq_len(nrow(x)) else find_row_indices(x, i)
+    row_names <- if (missing(i)) seq_len(nrow(x)) else find_row_indices(x, i)
+    row_indices <- find_row_indices(x, row_names)
     cached <- is_in_cache(x, column_names)
     column_indices[cached] <- 0L
     if (length(column_names) == 1L && drop)
@@ -194,21 +195,27 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
             add_to_cache(x, column, d[[column]])
     }
     d[which(cached)] <- lapply(find_in_cache(x, column_names[cached]), `[`, row_indices)
-    attr(d, "row.names") <- if (all(row_indices < 0L)) seq_len(nrow(x))[row_indices] else row_indices
+    attr(d, "row.names") <- row_names
     class(d) <- "data.frame"
     d
 })
 
 find_row_indices <- function(x, i) {
     switch(typeof(i),
-    integer = i,
-    double = as.integer(i),
-    logical = {
-        if (length(i) < nrow(x))
-            i <- rep_len(i, nrow(x))
-        which(i)
-    },
-    character = seq_len(nrow(x)))
+        integer = {
+            if (all(i < 0L))
+                i <- seq_len(nrow(x))[i]
+            i
+        },
+        double = {
+            find_row_indices(x, as.integer(i))
+        },
+        logical = {
+            if (length(i) < nrow(x))
+                i <- rep_len(i, nrow(x))
+            which(i)
+        },
+        character = seq_len(nrow(x)))
 }
 
 setGeneric("head")
