@@ -190,7 +190,7 @@ setMethod("[", "Readabel", function(x, i, j, drop = TRUE) {
         vector(mode = "list", length = length(column_indices)),
         row_indices, column_indices, PACKAGE = "Readabel")
     names(d) <- column_names
-    if (length(row_indices) == nrow(x) && all(row_indices == seq_len(nrow(x)))) {
+    if (any(!cached) && identical(row_indices, seq_len(nrow(x)))) {
         for (column in column_names[!cached])
             add_to_cache(x, column, d[[column]])
     }
